@@ -5,5 +5,5 @@ package com.example.s198599.s198599_mappe3.api_tools;
  */
 public interface JSONCallback {
 
-    void notifyJsonResult(String result);
+    void notifyJsonResult();
 }

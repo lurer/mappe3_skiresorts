@@ -7,9 +7,11 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.example.s198599.s198599_mappe3.api_tools.FnuggAPI;
+import com.example.s198599.s198599_mappe3.api_tools.JSONCallback;
+
 import lib.Static_lib;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements JSONCallback{
 
     private TextView output;
 
@@ -19,8 +21,8 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
 
         output = (TextView)findViewById(R.id.result);
-        FnuggAPI api = new FnuggAPI();
-        api.execute(Static_lib.APIURL);
+        FnuggAPI api = new FnuggAPI(this);
+        api.execute(Static_lib.API_URL_INIT);
 
     }
 
@@ -46,4 +48,8 @@ public class MainActivity extends AppCompatActivity{
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void notifyJsonResult() {
+
+    }
 }
