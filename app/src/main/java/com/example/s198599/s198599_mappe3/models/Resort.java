@@ -1,11 +1,9 @@
 package com.example.s198599.s198599_mappe3.models;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-
+import com.google.android.gms.maps.model.LatLng;
 import lib.Static_lib.*;
 
 /**
@@ -19,7 +17,7 @@ public class Resort implements Serializable{
     private int id;
     private String name;
     private String description;
-    private ResortLocation location;
+    private LatLng location;
 
 
     private Map<WEEKDAY, OpeningHours> openingHours;
@@ -55,11 +53,11 @@ public class Resort implements Serializable{
         this.description = description;
     }
 
-    public ResortLocation getLocation() {
+    public LatLng getLocation() {
         return location;
     }
 
-    public void setLocation(ResortLocation location) {
+    public void setLocation(LatLng location) {
         this.location = location;
     }
 }

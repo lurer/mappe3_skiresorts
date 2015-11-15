@@ -1,6 +1,10 @@
 <resources>
-    <string name="app_name">S198599_mappe3</string>
+    <string name="app_name">Skiresorts</string>
+    <string name="showListMenu">Show as list</string>
+    <string name="showMapMenu">Show in map</string>
+    <string name="settingsMenu">Settings</string>
+    <string name="showInfoMenu">Information</string>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+
+
 </resources>

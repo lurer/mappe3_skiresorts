@@ -1,6 +1,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+
+    <item android:id="@+id/showMap"
+        android:title="@string/showMapMenu"
+        app:showAsAction="always"
+        android:icon="@drawable/mapview_action_white"/>
+
+    <item android:id="@+id/showList"
+        android:title="@string/showListMenu"
+        app:showAsAction="always"
+        android:icon="@drawable/list_action_white"/>
+
+    <item android:id="@+id/showInfo"
+        android:title="@string/showInfoMenu"
+        app:showAsAction="always"
+        android:icon="@drawable/information_action_white"/>
+
+    <item android:id="@+id/settings"
+        android:title="string/settings"
+        app:showAsAction="always"
+        android:icon="@drawable/settings_action_white"/>
 </menu>
