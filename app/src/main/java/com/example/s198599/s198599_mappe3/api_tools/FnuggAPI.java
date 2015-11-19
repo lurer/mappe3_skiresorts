@@ -11,7 +11,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
+import lib.Static_lib.*;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -24,51 +24,37 @@ import lib.Static_lib;
 /**
  * Created by espen on 11/3/15.
  */
-public class FnuggAPI extends AsyncTask<String, Void, String> {
+public class FnuggAPI extends AsyncTask<USE_API, Void, String> {
 
     private ResortRepository repository;
     private String jsonResult;
     private JsonParser parser;
     private JsonElement root;
     private JsonArray outerArray;
-    private JSONCallback callback;
+    private FnuggCallback callback;
 
+    //public static final String API_URL_INIT = "http://fnuggapi.cloudapp.net/search?sourceFields=_id,name,location&page=2&size=15";
+    //public static final String API_URL_INIT = "http://fnuggapi.cloudapp.net/search?facet=region:%C3%98stlandet&sourceFields=_id,name,location";
+    public static final String API_URL_SEARCH_ID = "http://fnuggapi.cloudapp.net/search?q=id:";
+    public static final int API_NUM_RESORTS = 15;
 
-
-    public FnuggAPI(JSONCallback callback){
+    public FnuggAPI(FnuggCallback callback){
         this.callback = callback;
     }
 
 
     @Override
-    protected String doInBackground(String... urls) {
+    protected String doInBackground(USE_API... params) {
 
         getRespositoryInstance();        //Få tak i repository
 
-        for(String apiUrl : urls){
-
-            try{
-
-                URL url = new URL(apiUrl);
-                Log.d("RESORT", "URL: " + url.toString());
-
-                jsonResult = IOUtils.toString(url);             //Kjør API-kallet
-                parser = new JsonParser();
-                root = parser.parse(jsonResult);                //Finn rot-elementer i Json-objektet
-                outerArray = root.getAsJsonObject().get("hits") //OuterArray er startpunktet for all data.
-                        .getAsJsonObject().getAsJsonArray("hits");
-
-                Log.d("RESORT", "Klar for JSON-konvertering til Java-objekter");
-            }catch(MalformedURLException me){
-                Log.d("RESORT", "Exception - FnuggAPI - MalformedURLException");
-            }catch (IOException ioe){
-                Log.d("RESORT", "Exception - FnuggAPI - IOException");
-            }
+        for(USE_API param : params){
 
 
             //Finner ut hvilken jobb som skal gjøres med Jsonresultatet
-            switch (apiUrl){
-                case Static_lib.API_URL_INIT:
+            switch (param){
+                case FNUGG_INIT:
+                    getJsonStringForAllResorts();
                     initialImportLocationAndIds();
                     break;
             }
@@ -79,9 +65,11 @@ public class FnuggAPI extends AsyncTask<String, Void, String> {
         return "";
     }
 
+
+
     @Override
     protected void onPostExecute(String result) {
-        callback.notifyJsonResult();
+        callback.notifyFnuggResult();
     }
 
 
@@ -90,6 +78,46 @@ public class FnuggAPI extends AsyncTask<String, Void, String> {
     public void getRespositoryInstance(){
         repository = ResortRepository.getInstance();
     }
+
+
+
+    public void getJsonStringForAllResorts(){
+
+        String apiUrl = "http://fnuggapi.cloudapp.net/search?sourceFields=_id,name,location&size="+API_NUM_RESORTS+"&page=0";
+        try{
+            URL url;
+            outerArray = new JsonArray();
+            parser = new JsonParser();
+            int page = 1;
+            boolean doUntil = true;
+            do{
+
+                apiUrl = apiUrl.substring(0, apiUrl.length()-1);
+                apiUrl += String.valueOf(page);
+                url = new URL(apiUrl);
+                Log.d("RESORT", "URL: " + url.toString());
+
+                jsonResult = IOUtils.toString(url);             //Kjør API-kallet
+
+                root = parser.parse(jsonResult);                //Finn rot-elementer i Json-objektet
+
+
+                outerArray.addAll(root.getAsJsonObject().get("hits") //OuterArray er startpunktet for all data.
+                        .getAsJsonObject().getAsJsonArray("hits"));
+                page++;
+            }while( doUntil);
+
+
+            Log.d("RESORT", "Klar for JSON-konvertering til Java-objekter");
+            Log.d("RESORT", jsonResult.toString());
+        }catch(MalformedURLException me){
+            Log.d("RESORT", "Exception - FnuggAPI - MalformedURLException");
+        }catch (IOException ioe){
+            Log.d("RESORT", "Exception - FnuggAPI - IOException");
+        }
+    }
+
+
 
 
     /**
@@ -113,7 +141,7 @@ public class FnuggAPI extends AsyncTask<String, Void, String> {
             newResort.setName(name);
             newResort.setLocation(loc);
             repository.addResortToList(newResort);
-            Log.d("RESORT", "New Resort; " + id + " " + name);
+            //Log.d("RESORT", "New Resort; " + id + " " + name);
         }
     }
 }

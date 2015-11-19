@@ -18,7 +18,9 @@ public class Resort implements Serializable{
     private String name;
     private String description;
     private LatLng location;
+    private Distance distance;
 
+    private int markerId;
 
     private Map<WEEKDAY, OpeningHours> openingHours;
     private LiftTicketPrices prices;
@@ -59,5 +61,21 @@ public class Resort implements Serializable{
 
     public void setLocation(LatLng location) {
         this.location = location;
+    }
+
+    public int getMarkerId() {
+        return markerId;
+    }
+
+    public void setMarkerId(int markerId) {
+        this.markerId = markerId;
+    }
+
+    public Distance getDistance() {
+        return distance;
+    }
+
+    public void setDistance(Distance distance) {
+        this.distance = distance;
     }
 }

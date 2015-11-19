@@ -1,16 +1,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.s198599.s198599_mappe3.ResortInfoActivity">
 
-    <item android:id="@+id/showMap"
-        android:title="@string/showMapMenu"
-        app:showAsAction="always"
-        android:icon="@drawable/mapview_action_white"/>
-
-    <item android:id="@+id/showList"
-        android:title="@string/showListMenu"
-        app:showAsAction="always"
-        android:icon="@drawable/list_action_white"/>
 
     <item android:id="@+id/showInfo"
         android:title="@string/showInfoMenu"

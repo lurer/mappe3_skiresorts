@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.s198599.s198599_mappe3.AboutActivity">
+
+    <item android:id="@+id/quit"
+        android:title="@string/quitMenu"
+        app:showAsAction="always"
+        android:icon="@drawable/quit_action_white"/>
+</menu>
