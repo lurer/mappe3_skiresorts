@@ -12,9 +12,29 @@
     <string name="title_activity_about">AboutActivity</string>
     <string name="title_activity_resort_info">ResortInfoActivity</string>
 
+    <string name="lblInfo">Info:</string>
     <string name="lblDistance">Distance:</string>
     <string name="lblDuration">Driving time:</string>
-    <string name="lblContact">Contact info:</string>
-    <string name="lblLifts">Lifts:</string>
-    <string name="lblSlopes">Slopes</string>
+    <string name="lblContact">Contact:</string>
+    <string name="lblLifts">Lifts open:</string>
+    <string name="lblSlopes">Slopes open:</string>
+    <string name="lblService">Phone service:</string>
+    <string name="lblPatrol">Ski patrol:</string>
+    <string name="lblPhone">Phone:</string>
+    <string name="lblEmail">Email:</string>
+
+    <string name="timeUnit">hours</string>
+
+    <string name="prefTitle">Preferences</string>
+    <string name="prefZoom">Choose zoom level</string>
+    <string name="prefFineZoom">Fine Zoom</string>
+
+
+    <string name="aboutTitle">Skiresorts - About</string>
+    <string name="aboutProvides">The app provides:</string>
+    <string name="aboutInformation">About the information:</string>
+
+    <string name="sort">Sort by</string>
+    <string name="alphabetical">a-z</string>
+    <string name="distance">km</string>
 </resources>

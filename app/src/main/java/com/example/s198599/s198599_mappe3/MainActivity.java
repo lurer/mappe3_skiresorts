@@ -2,12 +2,14 @@ package com.example.s198599.s198599_mappe3;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -33,19 +35,22 @@ import lib.Static_lib;
 
 public class MainActivity extends AppCompatActivity implements FnuggCallback{
 
-    FnuggAPI api;
+
+    private ResortRepository repository;
     private MyMapHandler mapHandler;
-    private GoogleDistanceAPI googleDistanceAPI;
+    public static Display DISPLAY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        DISPLAY = getWindowManager().getDefaultDisplay();
+        repository = ResortRepository.getInstance();
         mapHandler = new MyMapHandler();
-        api = new FnuggAPI(this);              //Grensesnittet mot APIet
-        api.execute(Static_lib.USE_API.FNUGG_INIT);       //Starter AsyncTask
 
+
+        FnuggAPI fnuggApi = new FnuggAPI(this);              //Grensesnittet mot APIet
+        fnuggApi.execute(Static_lib.USE_API.FNUGG_INIT);       //Starter AsyncTask
     }
 
     @Override
@@ -53,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
 
         getMenuInflater().inflate(R.menu.menu_main, menu);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         return true;
     }
 
@@ -62,6 +68,9 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
         Intent i;
         switch(item.getItemId()){
             case R.id.showList:
+                i = new Intent(this, ResortList.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
                 break;
             case R.id.showMap:
                 break;
@@ -102,19 +111,21 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
     /**
      * Klassen som håndterer alle kartting
      */
-    private class MyMapHandler implements OnMapReadyCallback, DistanceCallback{
+    private class MyMapHandler implements OnMapReadyCallback, DistanceCallback, FnuggCallback{
 
-        private ResortRepository repo;
+
         private List<Resort> list;
         private GoogleMap map;
         private Location myLocation;
-
+        private Resort resort;
         private float zoomLevel;
+        private FnuggAPI fnuggApi;
 
         public MyMapHandler(){
-            repo = ResortRepository.getInstance();
-            list = repo.getResorts();
-            zoomLevel = 8.0f;
+            list = repository.getResorts();
+            SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+            zoomLevel = prefs.getFloat("zoomLevel", 9.0f);
+            //zoomLevel = 9.0f;
         }
 
         /**
@@ -127,17 +138,28 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
 
             map = googleMap;
 
+
             zoomMapToMyLocation();  //Posisjonerer kartet til min lokasjon.
             addMarkersOnMap();      //Legger til alle markers på kartet
 
-            googleDistanceAPI = new GoogleDistanceAPI(this);
-            googleDistanceAPI.execute(myLocation);
+            if(!repository.isLoaded()){
+                new GoogleDistanceAPI(this).execute(myLocation);
 
+            }
 
             googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker) {
 
+                    resort = repository.matchLocationinformation(marker.getPosition());
+                    if(resort != null){
+                        Log.d("RESORT", "Marker clicked. markerID = " + resort.getName());
+
+                        repository.setResortMarkerClicked(resort.getId());
+                        fnuggApi = new FnuggAPI(mapHandler);              //Grensesnittet mot APIet
+                        fnuggApi.execute(Static_lib.USE_API.FNUGG_DETAIL);
+
+                    }
                     return false;
                 }
             });
@@ -151,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
         public void addMarkersOnMap() {
             for (Resort r : list) {
 
-                Log.d("RESORT", "I onMapReady " + r.getLocation().toString());
+                //Log.d("RESORT", "I onMapReady " + r.getLocation().toString());
                 LatLng ll = r.getLocation();
                 map.addMarker(new MarkerOptions().position(ll).title(r.getName()));
 
@@ -191,5 +213,13 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
         }
 
 
+        @Override
+        public void notifyFnuggResult() {
+
+            Intent i = new Intent(getBaseContext(), ResortInfoActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            i.putExtra("ResortID", resort.getId());
+            startActivity(i);
+        }
     }//MyMapHandler
 }

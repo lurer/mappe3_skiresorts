@@ -1,6 +1,7 @@
 package com.example.s198599.s198599_mappe3.models;
 
 import android.location.Location;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -65,6 +66,15 @@ public class Distance {
 
         int hours = (int)tempminutter / 60;
         int minutter = tempminutter % 60;
-        durationTime = String.valueOf(hours) + ": " + String.valueOf(minutter);
+        durationTime = String.valueOf(hours) + "h " + String.valueOf(minutter) +"m";
+
+    }
+
+    public String getDistanceKmString(){
+        return " " + getDistanceKm() + " km";
+    }
+
+    public String getDurationString(){
+        return " " + durationTime;
     }
 }

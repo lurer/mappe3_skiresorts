@@ -19,12 +19,12 @@ public class Resort implements Serializable{
     private String description;
     private LatLng location;
     private Distance distance;
-
+    private Contact contact;
     private int markerId;
 
     private Map<WEEKDAY, OpeningHours> openingHours;
     private LiftTicketPrices prices;
-    private Lifts lift;
+    private Lifts lifts;
     private Slopes slopes;
     private Images images;
     private List<SOCIALMEDIA> socialmedias;
@@ -77,5 +77,37 @@ public class Resort implements Serializable{
 
     public void setDistance(Distance distance) {
         this.distance = distance;
+    }
+
+    public Lifts getLifts() {
+        return lifts;
+    }
+
+    public void setLifts(Lifts lifts) {
+        this.lifts = lifts;
+    }
+
+    public Slopes getSlopes() {
+        return slopes;
+    }
+
+    public void setSlopes(Slopes slopes) {
+        this.slopes = slopes;
+    }
+
+    public Images getImages() {
+        return images;
+    }
+
+    public void setImages(Images images) {
+        this.images = images;
+    }
+
+    public Contact getContact() {
+        return contact;
+    }
+
+    public void setContact(Contact contact) {
+        this.contact = contact;
     }
 }

@@ -1,10 +1,20 @@
 package com.example.s198599.s198599_mappe3.api_tools;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 
+import com.example.s198599.s198599_mappe3.MainActivity;
+import com.example.s198599.s198599_mappe3.models.Contact;
+import com.example.s198599.s198599_mappe3.models.ImageScaled;
+import com.example.s198599.s198599_mappe3.models.Images;
+import com.example.s198599.s198599_mappe3.models.Lifts;
 import com.example.s198599.s198599_mappe3.models.Resort;
+import com.example.s198599.s198599_mappe3.models.Slopes;
 import com.google.android.gms.maps.model.LatLng;
 import com.example.s198599.s198599_mappe3.models.ResortRepository;
 import com.google.gson.JsonArray;
@@ -15,10 +25,9 @@ import lib.Static_lib.*;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import lib.Static_lib;
 
 
 /**
@@ -33,29 +42,38 @@ public class FnuggAPI extends AsyncTask<USE_API, Void, String> {
     private JsonArray outerArray;
     private FnuggCallback callback;
 
-    //public static final String API_URL_INIT = "http://fnuggapi.cloudapp.net/search?sourceFields=_id,name,location&page=2&size=15";
-    //public static final String API_URL_INIT = "http://fnuggapi.cloudapp.net/search?facet=region:%C3%98stlandet&sourceFields=_id,name,location";
-    public static final String API_URL_SEARCH_ID = "http://fnuggapi.cloudapp.net/search?q=id:";
-    public static final int API_NUM_RESORTS = 15;
+
+
 
     public FnuggAPI(FnuggCallback callback){
         this.callback = callback;
     }
 
+    public FnuggAPI(){
+
+    }
+
+
+    public void setCallback(FnuggCallback callback){
+        this.callback = callback;
+    }
 
     @Override
     protected String doInBackground(USE_API... params) {
 
-        getRespositoryInstance();        //Få tak i repository
+        repository = ResortRepository.getInstance();        //Få tak i repository
 
         for(USE_API param : params){
-
-
             //Finner ut hvilken jobb som skal gjøres med Jsonresultatet
             switch (param){
                 case FNUGG_INIT:
                     getJsonStringForAllResorts();
+                    //Log.d("RESORT", outerArray.toString());
                     initialImportLocationAndIds();
+                    break;
+                case FNUGG_DETAIL:
+                    Log.d("RESORT", "FNUGG_DETAIL er valgt");
+                    getResortDetails();
                     break;
             }
 
@@ -73,43 +91,37 @@ public class FnuggAPI extends AsyncTask<USE_API, Void, String> {
     }
 
 
-
-
-    public void getRespositoryInstance(){
-        repository = ResortRepository.getInstance();
-    }
-
-
-
     public void getJsonStringForAllResorts(){
-
-        String apiUrl = "http://fnuggapi.cloudapp.net/search?sourceFields=_id,name,location&size="+API_NUM_RESORTS+"&page=0";
+        //http://fnuggapi.cloudapp.net/search?sourceFields=_id,name,location&range=id:11|20
+        String urlTemplate = "http://fnuggapi.cloudapp.net/search?sourceFields=_id,name,location&range=id:";
         try{
             URL url;
             outerArray = new JsonArray();
             parser = new JsonParser();
-            int page = 1;
+            int from = 91;
+            int to = 100;
             boolean doUntil = true;
-            do{
-
-                apiUrl = apiUrl.substring(0, apiUrl.length()-1);
-                apiUrl += String.valueOf(page);
+            while( doUntil ){
+                String apiUrl = urlTemplate;
+                apiUrl = apiUrl + (from +"|" + to);
                 url = new URL(apiUrl);
                 Log.d("RESORT", "URL: " + url.toString());
 
                 jsonResult = IOUtils.toString(url);             //Kjør API-kallet
-
                 root = parser.parse(jsonResult);                //Finn rot-elementer i Json-objektet
 
+                if(root.getAsJsonObject().get("hits").getAsJsonObject().get("total").getAsInt() == 0)
+                    doUntil = false;
 
                 outerArray.addAll(root.getAsJsonObject().get("hits") //OuterArray er startpunktet for all data.
                         .getAsJsonObject().getAsJsonArray("hits"));
-                page++;
-            }while( doUntil);
+                from = to +1;
+                to += 10;
+            };
 
 
             Log.d("RESORT", "Klar for JSON-konvertering til Java-objekter");
-            Log.d("RESORT", jsonResult.toString());
+            //Log.d("RESORT", jsonResult.toString());
         }catch(MalformedURLException me){
             Log.d("RESORT", "Exception - FnuggAPI - MalformedURLException");
         }catch (IOException ioe){
@@ -141,7 +153,104 @@ public class FnuggAPI extends AsyncTask<USE_API, Void, String> {
             newResort.setName(name);
             newResort.setLocation(loc);
             repository.addResortToList(newResort);
-            //Log.d("RESORT", "New Resort; " + id + " " + name);
+            Log.d("RESORT", "New Resort; " + id + " " + name);
         }
     }
+
+
+    public void getResortDetails(){
+        int selectedId = repository.getResortMarkerClicked();
+
+        String apiDetailFirstPart = "http://fnuggapi.cloudapp.net/get/resort/";
+        String apiDetailLastPart = "?sourceFields=_id,name,contact,lifts,slopes,images";
+        String detailUrl = apiDetailFirstPart + selectedId + apiDetailLastPart;
+        Resort selectedResort = repository.getResortById(selectedId);
+
+        try{
+            URL url;
+
+            url = new URL(detailUrl);
+            //Log.d("RESORT", "URL: " + url.toString());
+
+            String jsonResult = IOUtils.toString(url);             //Kjør API-kallet
+            JsonParser parser = new JsonParser();
+            JsonElement root = parser.parse(jsonResult);                //Finn rot-elementer i Json-objektet
+            //Log.d("RESORT", jsonResult.toString());
+
+            JsonObject outerObject = root.getAsJsonObject().get("_source").getAsJsonObject();
+
+            saveLiftsAndSlopes(outerObject, selectedResort);
+            saveImages(outerObject, selectedResort);
+            saveContactInfo(outerObject, selectedResort);
+
+            Log.d("RESORT", "Klar for JSON-konvertering til Java-objekter");
+
+        }catch(MalformedURLException me){
+            Log.d("RESORT", "Exception - FnuggAPI - MalformedURLException");
+        }catch (IOException ioe){
+            Log.d("RESORT", "Exception - FnuggAPI - IOException");
+        }
+    }
+
+    public void saveLiftsAndSlopes(JsonObject outerObject, Resort selectedResort) throws IOException{
+        Lifts lifts = new Lifts();
+        Slopes slopes = new Slopes();
+
+        JsonObject lift = outerObject.getAsJsonObject("lifts");
+        JsonObject slope = outerObject.getAsJsonObject("slopes");
+
+        lifts.setTotal(lift.get("count").getAsInt());
+        lifts.setOpen(lift.get("open").getAsInt());
+
+        slopes.setTotal(slope.get("count").getAsInt());
+        slopes.setOpen(slope.get("open").getAsInt());
+
+        selectedResort.setLifts(lifts);
+        selectedResort.setSlopes(slopes);
+
+    }
+
+    public void saveImages(JsonObject outerObject, Resort selectedResort) throws IOException{
+
+
+        DisplayMetrics dm = new DisplayMetrics();
+        Display display = MainActivity.DISPLAY;
+        display.getMetrics(dm);
+        int width = dm.widthPixels;
+        int height = dm.heightPixels;
+
+        Log.d("RESORT", "Screen Width: " + width);
+        Images images = new Images();
+        ImageScaled scale = new ImageScaled();
+        images.setScaled(scale);
+        selectedResort.setImages(images);
+
+        JsonObject jsonImages = outerObject.get("images").getAsJsonObject();
+
+        String imgSize = "";
+        if(width <= 480){
+            imgSize = "image_16_9_s";
+        }else if(width <= 1024) {
+            imgSize = "image_16_9_m";
+        }else{
+            imgSize = "image_16_9_xl";
+        }
+        Bitmap image_16_9 = BitmapFactory.decodeStream((InputStream) new URL(jsonImages.get(imgSize).getAsString()).getContent());
+        images.setImage_16_9(image_16_9);
+
+    }
+
+    public void saveContactInfo(JsonObject outerObject, Resort selectedResort) throws IOException{
+
+        String address = outerObject.get("contact").getAsJsonObject().get("address").getAsString();
+        String zipCode = outerObject.get("contact").getAsJsonObject().get("zip_code").getAsString();
+        String city = outerObject.get("contact").getAsJsonObject().get("city").getAsString();
+        String phoneService = outerObject.get("contact").getAsJsonObject().get("phone_servicecenter").getAsString();
+        String phonePatrol = outerObject.get("contact").getAsJsonObject().get("phone_skipatrol").getAsString();
+        String callNumber = outerObject.get("contact").getAsJsonObject().get("call_number").getAsString();
+        String email = outerObject.get("contact").getAsJsonObject().get("email").getAsString();
+        Contact contact = new Contact(address, zipCode, city, phoneService, phonePatrol, callNumber, email);
+        selectedResort.setContact(contact);
+    }
+
 }

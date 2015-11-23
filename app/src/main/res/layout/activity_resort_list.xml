@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/laySort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_centerHorizontal="true">
+
+        <RelativeLayout
+            android:id="@+id/laySort1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            >
+
+            <ImageView
+                android:id="@+id/az_asc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="sortAlphabeticallyAsc"
+                android:background="@drawable/up_action_white"
+                />
+            <TextView
+                android:id="@+id/alphabetical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/alphabetical"
+                android:textColor="@color/header_text_color"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/az_asc"/>
+            <ImageView
+                android:id="@+id/az_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="sortAlphabeticallyDesc"
+                android:background="@drawable/down_action_white"
+                android:layout_toRightOf="@+id/alphabetical"/>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/sortBy"
+            android:layout_toRightOf="@id/laySort1"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/header_text_color"
+            android:text="@string/sort"/>
+
+        <RelativeLayout
+
+            android:id="@+id/laySort2"
+            android:layout_toRightOf="@+id/sortBy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/dist_asc"
+                android:layout_width="wrap_content"
+                android:onClick="sortDistanceAsc"
+                android:layout_height="wrap_content"
+                android:background="@drawable/up_action_white"
+                />
+            <TextView
+                android:id="@+id/distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/distance"
+                android:textColor="@color/header_text_color"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/dist_asc"/>
+            <ImageView
+                android:id="@+id/dist_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="sortDistanceDesc"
+                android:background="@drawable/down_action_white"
+                android:layout_toRightOf="@+id/distance"/>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <fragment
+        android:layout_below="@+id/laySort"
+        android:name="com.example.s198599.s198599_mappe3.models.ResortListFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/resort_list_view_activity"
+        android:layout_centerHorizontal="true"/>
+</RelativeLayout>

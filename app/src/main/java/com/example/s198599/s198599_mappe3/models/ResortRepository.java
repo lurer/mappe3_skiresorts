@@ -1,8 +1,10 @@
 package com.example.s198599.s198599_mappe3.models;
 
+import com.google.android.gms.maps.model.*;
+
 import java.util.ArrayList;
 import java.util.List;
-
+import com.google.android.gms.maps.model.*;
 /**
  * Created by espen on 11/5/15.
  */
@@ -10,7 +12,24 @@ public class ResortRepository {
 
     private static ResortRepository instance;
     private static List<Resort> resorts;
+    private static boolean isLoaded;
+    private static int resortMarkerClicked;
 
+    public int getResortMarkerClicked() {
+        return resortMarkerClicked;
+    }
+
+    public void setResortMarkerClicked(int resortMarkerClicked) {
+        ResortRepository.resortMarkerClicked = resortMarkerClicked;
+    }
+
+    public boolean isLoaded() {
+        return isLoaded;
+    }
+
+    public void setIsLoaded(boolean isLoaded) {
+        ResortRepository.isLoaded = isLoaded;
+    }
 
     private ResortRepository(){
         if(resorts == null)
@@ -49,5 +68,26 @@ public class ResortRepository {
         for(Resort r : newList){
             resorts.add(r);
         }
+    }
+
+
+    public Resort matchLocationinformation(LatLng innLL){
+        if(innLL != null){
+            for(Resort r : resorts){
+                if(r.getDistance().compareLocations(innLL))
+                    return r;
+            }
+        }
+
+        return null;
+    }
+
+
+    public Resort getResortById(int id){
+        for(Resort r : resorts){
+            if(r.getId() == id)
+                return r;
+        }
+        return null;
     }
 }

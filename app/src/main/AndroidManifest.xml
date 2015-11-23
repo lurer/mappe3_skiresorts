@@ -42,9 +42,14 @@
             android:label="@string/title_activity_about" >
         </activity>
         <activity
-            android:theme="@android:style/Theme.Dialog"
+
             android:name=".ResortInfoActivity"
             android:label="@string/title_activity_resort_info" >
+        </activity>
+        <activity
+            android:name=".ResortList"
+            android:label="ResortList">
+
         </activity>
     </application>
 

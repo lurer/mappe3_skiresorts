@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:paddingLeft="5dp">
+
+    <ImageView
+        android:id="@+id/itemImage"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/snowflake_256_256"/>
+    <TextView
+        android:id="@+id/rName"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/itemImage"
+        android:textColor="@color/header_text_color"
+        android:textSize="20dp"
+        android:textStyle="bold"/>
+
+
+    <TextView
+        android:id="@+id/lblDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lblDistance"
+        android:layout_below="@+id/rName"
+        android:layout_toRightOf="@+id/itemImage"
+        android:layout_alignParentBottom="true"
+        android:textColor="@color/light_text_color"
+        />
+    <TextView
+        android:id="@+id/rDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rName"
+        android:layout_toRightOf="@+id/lblDistance"
+        android:textColor="@color/light_text_color"
+        />
+    <TextView
+        android:id="@+id/lblDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lblDuration"
+        android:layout_below="@+id/rName"
+
+        android:layout_marginLeft="170dp"
+        android:textColor="@color/light_text_color"
+        />
+    <TextView
+        android:id="@+id/rDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rName"
+        android:layout_toRightOf="@+id/lblDuration"
+        android:textColor="@color/light_text_color"
+        />
+
+</RelativeLayout>

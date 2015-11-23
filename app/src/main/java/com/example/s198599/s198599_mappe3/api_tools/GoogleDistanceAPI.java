@@ -43,7 +43,8 @@ public class GoogleDistanceAPI  extends AsyncTask<Location, Void, Void>{
     protected Void doInBackground(Location... param) {
 
 
-        getRespositoryInstance(); //Tilgang til Repository av Resorts
+        repository = ResortRepository.getInstance();
+
         myLocation = param[0]; //Min lokasjon
 
         destinationArray = new JsonArray();
@@ -96,6 +97,7 @@ public class GoogleDistanceAPI  extends AsyncTask<Location, Void, Void>{
 
         }while(counterLower < counterUpper);//while
 
+        repository.setIsLoaded(true);
 
         saveRelevantDataFromJson();
         return null;
@@ -107,9 +109,6 @@ public class GoogleDistanceAPI  extends AsyncTask<Location, Void, Void>{
         callback.notifyDistanceResult();
     }
 
-    public void getRespositoryInstance(){
-        repository = ResortRepository.getInstance();
-    }
 
 
     /**
@@ -125,10 +124,13 @@ public class GoogleDistanceAPI  extends AsyncTask<Location, Void, Void>{
         sb.append(myLat).append(",").append(myLng).append("&destinations=");
         List<Resort> list = repository.getResorts();
         for(int i = from; i < to; i++){
-            Resort r = list.get(i);
-            String rLat = String.valueOf(r.getLocation().latitude);
-            String rLng = String.valueOf(r.getLocation().longitude);
-            sb.append(rLat).append(",").append(rLng).append("|");
+            if(i < list.size()){
+                Resort r = list.get(i);
+                String rLat = String.valueOf(r.getLocation().latitude);
+                String rLng = String.valueOf(r.getLocation().longitude);
+                sb.append(rLat).append(",").append(rLng).append("|");
+            }
+
         }
         sb.deleteCharAt(sb.length() - 1);
         sb.append("&key=AIzaSyCrMqTpEHh1grz3TvsalZoUYry8pNUIJmk");
@@ -140,7 +142,7 @@ public class GoogleDistanceAPI  extends AsyncTask<Location, Void, Void>{
         Log.d("RESORT", "GoogleApi - Lagrer data fr GoogleApi");
 
         List<Resort> list = repository.getResorts();
-        Log.d("RESORT", "Resortlist og GoogleJson-resultat er like lang: " + list.size() + " " + elementsArray.size());
+        //Log.d("RESORT", "Resortlist og GoogleJson-resultat er like lang: " + list.size() + " " + elementsArray.size());
 
         for(int i = 0; i < list.size(); i++){
             JsonElement elem = elementsArray.get(i);

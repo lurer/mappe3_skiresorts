@@ -8,6 +8,6 @@ import java.util.Map;
 public abstract class SuperLiftSlope {
     private int count;
     private int open;
-    private int closed;
+
     private Map<String, Boolean> list;
 }

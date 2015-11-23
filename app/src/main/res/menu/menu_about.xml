@@ -6,5 +6,8 @@
     <item android:id="@+id/quit"
         android:title="@string/quitMenu"
         app:showAsAction="always"
+
         android:icon="@drawable/quit_action_white"/>
+
+
 </menu>
