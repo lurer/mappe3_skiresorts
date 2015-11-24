@@ -12,8 +12,29 @@ public class ResortRepository {
 
     private static ResortRepository instance;
     private static List<Resort> resorts;
-    private static boolean isLoaded;
+    private static boolean isLoaded;        //Alle data er lastet
     private static int resortMarkerClicked;
+    private static LatLng customMarkerPosition;
+    private static boolean disableGoogleApi;
+
+    public boolean isDisableGoogleApi() {
+        return disableGoogleApi;
+    }
+
+    public void setDisableGoogleApi(boolean disableGoogleApi) {
+        ResortRepository.disableGoogleApi = disableGoogleApi;
+    }
+
+    public LatLng getCustomMarkerPosition() {
+        return customMarkerPosition;
+    }
+
+    public void setCustomMarkerPosition(LatLng customMarkerPosition) {
+        ResortRepository.customMarkerPosition = customMarkerPosition;
+    }
+
+
+
 
     public int getResortMarkerClicked() {
         return resortMarkerClicked;
@@ -26,6 +47,9 @@ public class ResortRepository {
     public boolean isLoaded() {
         return isLoaded;
     }
+
+
+
 
     public void setIsLoaded(boolean isLoaded) {
         ResortRepository.isLoaded = isLoaded;

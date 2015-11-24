@@ -1,11 +1,8 @@
 package com.example.s198599.s198599_mappe3.models;
 
-import android.location.Location;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
-
-import java.util.Date;
 
 import lib.Static_lib;
 
@@ -55,8 +52,12 @@ public class Distance {
 
     private void getDistanceInKm(){
 
-        distanceKm = Double.parseDouble(Static_lib.DECIMAL_FORMAT1.format(distanceMeter / 1000));
-
+        try {
+            distanceKm = Double.parseDouble(Static_lib.DECIMAL_FORMAT_EN.format(distanceMeter / 1000));
+        }catch (NumberFormatException npe){
+            Log.d("RESORT", "Numberformat Exception i Distance - Get Distance");
+            distanceKm = distanceMeter / 1000;
+        }
     }
 
     private void getTimefromSec(){

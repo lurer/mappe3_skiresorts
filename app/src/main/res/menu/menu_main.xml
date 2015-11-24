@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
 
 
+    <item android:id="@+id/reload"
+        android:title="@string/reloadMenu"
+        app:showAsAction="always"
+        android:icon="@drawable/reload_action_white"/>
+
     <item android:id="@+id/showList"
         android:title="@string/showListMenu"
         app:showAsAction="always"
@@ -22,4 +27,6 @@
         android:title="@string/quitMenu"
         app:showAsAction="always"
         android:icon="@drawable/quit_action_white"/>
+
+
 </menu>

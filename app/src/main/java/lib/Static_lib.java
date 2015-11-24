@@ -7,7 +7,8 @@ import java.text.DecimalFormat;
  */
 public class Static_lib {
 
-    public static DecimalFormat DECIMAL_FORMAT1 = new DecimalFormat(".#");
+    public static DecimalFormat DECIMAL_FORMAT_EN = new DecimalFormat(".#");
+    public static DecimalFormat DECIMAL_FORMAT_NO = new DecimalFormat(",#");
 
     public enum USE_API {FNUGG_INIT, FNUGG_DETAIL}
     public enum IMAGE_SCALE {SCALE1, SCALE2, SCALE3}

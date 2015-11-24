@@ -25,7 +25,7 @@ import lib.Static_lib;
 /**
  * Created by espen on 11/17/15.
  */
-public class GoogleDistanceAPI  extends AsyncTask<Location, Void, Void>{
+public class GoogleDistanceAPI  extends AsyncTask<LatLng, Void, Void>{
 
     private ResortRepository repository;
     private String jsonResult;
@@ -35,22 +35,24 @@ public class GoogleDistanceAPI  extends AsyncTask<Location, Void, Void>{
     private JsonArray elementsArray;
     private DistanceCallback callback;
     private String apiUrl;
-    private Location myLocation;
+    private LatLng myLocation;
 
     public GoogleDistanceAPI(DistanceCallback callback){this.callback = callback;}
 
     @Override
-    protected Void doInBackground(Location... param) {
+    protected Void doInBackground(LatLng... param) {
 
 
         repository = ResortRepository.getInstance();
 
         myLocation = param[0]; //Min lokasjon
+        Log.d("RESORT", "MyLocation " + myLocation.toString());
 
         destinationArray = new JsonArray();
         elementsArray = new JsonArray();
 
         int listSize = repository.getResorts().size();
+        Log.d("RESORT", "ResortListSize " + listSize);
         int increment = 20;
         int counterLower = 0;
         int counterUpper = increment;
@@ -64,19 +66,13 @@ public class GoogleDistanceAPI  extends AsyncTask<Location, Void, Void>{
                 Log.d("RESORT", "GoogleDistanceURL: " + url.toString());
 
                 jsonResult = IOUtils.toString(url);             //Kjør API-kallet
+                Log.d("RESORT", "JsonResult " + jsonResult);
                 parser = new JsonParser();
                 root = parser.parse(jsonResult);                //Finn rot-elementer i Json-objektet
-
-
 
                 destinationArray.addAll(root.getAsJsonObject().get("destination_addresses").getAsJsonArray());
                 elementsArray.addAll(root.getAsJsonObject().getAsJsonArray("rows")
                         .get(0).getAsJsonObject().getAsJsonArray("elements"));
-
-
-
-                //Log.d("RESORT", "Desitnation array: " + destinationArray.toString());
-                //Log.d("RESORT", "Distance array: " + elementsArray.toString());
 
             }catch(NullPointerException npe){
                 Log.d("RESORT", "Exception - GoogleAPI - NullpointerException");
@@ -97,9 +93,10 @@ public class GoogleDistanceAPI  extends AsyncTask<Location, Void, Void>{
 
         }while(counterLower < counterUpper);//while
 
-        repository.setIsLoaded(true);
+
 
         saveRelevantDataFromJson();
+        repository.setIsLoaded(true); //////////Hindrer Google API å bli lastet før den er false igjen
         return null;
     }
 
@@ -115,8 +112,8 @@ public class GoogleDistanceAPI  extends AsyncTask<Location, Void, Void>{
      * Lager URL med alle skistedene som destinasjonsparamtere
       */
     public void generateApiUrl(int from, int to){
-        String myLat = String.valueOf(myLocation.getLatitude());
-        String myLng = String.valueOf(myLocation.getLongitude());
+        String myLat = String.valueOf(myLocation.latitude);
+        String myLng = String.valueOf(myLocation.longitude);
         String baseUrl = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=";
         StringBuilder sb = new StringBuilder();
 
@@ -145,15 +142,20 @@ public class GoogleDistanceAPI  extends AsyncTask<Location, Void, Void>{
         //Log.d("RESORT", "Resortlist og GoogleJson-resultat er like lang: " + list.size() + " " + elementsArray.size());
 
         for(int i = 0; i < list.size(); i++){
+
             JsonElement elem = elementsArray.get(i);
             JsonObject dist = elem.getAsJsonObject().get("distance").getAsJsonObject();
             JsonObject dura = elem.getAsJsonObject().get("duration").getAsJsonObject();
 
+
             Distance distance = new Distance(list.get(i).getLocation()
-                    , dist.get("value").getAsInt()
-                    , dura.get("value").getAsInt());
+                    ,dist.get("value").getAsInt()
+                    ,dura.get("value").getAsInt());
             list.get(i).setDistance(distance);
+
         }
+
+
     }
 
 }

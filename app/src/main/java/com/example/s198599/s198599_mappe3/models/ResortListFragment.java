@@ -15,6 +15,8 @@ import android.widget.ListView;
 import com.example.s198599.s198599_mappe3.R;
 
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -24,7 +26,6 @@ import java.util.List;
 public class ResortListFragment extends ListFragment{
     private ResortAdapter adapter;
     private ListView lv;
-    private ResortRepository repository;
     private List<Resort> list;
 
     private ResortAdapterCallback callback;
@@ -69,19 +70,23 @@ public class ResortListFragment extends ListFragment{
 
 
     public void sortAlphabeticallyAsc(){
-
+        Collections.sort(list, Resort.SortAlphabeticallyAsc);
+        adapter.notifyDataSetChanged();
     }
 
     public void sortAlphabeticallyDesc(){
-
+        Collections.sort(list, Resort.SortAlphabeticallyDesc);
+        adapter.notifyDataSetChanged();
     }
 
     public void sortDistanceAsc(){
-
+        Collections.sort(list, Resort.SortDistanceAsc);
+        adapter.notifyDataSetChanged();
     }
 
     public void sortDistanceDesc(){
-
+        Collections.sort(list, Resort.SortDistanceDesc);
+        adapter.notifyDataSetChanged();
     }
 }
 

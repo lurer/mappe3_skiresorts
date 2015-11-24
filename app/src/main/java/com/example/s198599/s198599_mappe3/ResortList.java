@@ -107,19 +107,23 @@ public class ResortList extends AppCompatActivity implements ResortAdapterCallba
 
 
     public void sortAlphabeticallyAsc(View view){
-        listFragment.sortAlphabeticallyAsc();
+        if(repository.isLoaded())
+            listFragment.sortAlphabeticallyAsc();
     }
 
     public void sortAlphabeticallyDesc(View view){
-        listFragment.sortAlphabeticallyDesc();
+        if(repository.isLoaded())
+            listFragment.sortAlphabeticallyDesc();
     }
 
     public void sortDistanceAsc(View view){
-        listFragment.sortDistanceAsc();
+        if(repository.isLoaded())
+            listFragment.sortDistanceAsc();
     }
 
     public void sortDistanceDesc(View view){
-        listFragment.sortDistanceDesc();
+        if(repository.isLoaded())
+            listFragment.sortDistanceDesc();
     }
 
 }

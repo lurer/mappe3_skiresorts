@@ -1,6 +1,7 @@
 package com.example.s198599.s198599_mappe3.models;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import com.google.android.gms.maps.model.LatLng;
@@ -22,12 +23,11 @@ public class Resort implements Serializable{
     private Contact contact;
     private int markerId;
 
-    private Map<WEEKDAY, OpeningHours> openingHours;
-    private LiftTicketPrices prices;
+
     private Lifts lifts;
     private Slopes slopes;
     private Images images;
-    private List<SOCIALMEDIA> socialmedias;
+
 
 
 
@@ -110,4 +110,37 @@ public class Resort implements Serializable{
     public void setContact(Contact contact) {
         this.contact = contact;
     }
+
+
+    public static Comparator<Resort> SortAlphabeticallyAsc = new Comparator<Resort>(){
+
+        @Override
+        public int compare(Resort r1, Resort r2) {
+            return r1.getName().compareTo(r2.getName());
+        }
+    };
+
+    public static Comparator<Resort> SortAlphabeticallyDesc = new Comparator<Resort>(){
+
+        @Override
+        public int compare(Resort r1, Resort r2) {
+            return r2.getName().compareTo(r1.getName());
+        }
+    };
+
+    public static Comparator<Resort> SortDistanceAsc = new Comparator<Resort>(){
+
+        @Override
+        public int compare(Resort r1, Resort r2) {
+            return (int)r1.getDistance().getDistanceKm() - (int)r2.getDistance().getDistanceKm();
+        }
+    };
+
+    public static Comparator<Resort> SortDistanceDesc = new Comparator<Resort>(){
+
+        @Override
+        public int compare(Resort r1, Resort r2) {
+            return (int)r2.getDistance().getDistanceKm() - (int)r1.getDistance().getDistanceKm();
+        }
+    };
 }

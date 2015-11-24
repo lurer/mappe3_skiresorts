@@ -5,6 +5,7 @@
     <string name="settingsMenu">Settings</string>
     <string name="showInfoMenu">Information</string>
     <string name="quitMenu">Quit</string>
+    <string name="reloadMenu">Reload</string>
     <string name="title_activity_preference">PreferenceActivity</string>
 
     <string name="hello_world">Hello world!</string>

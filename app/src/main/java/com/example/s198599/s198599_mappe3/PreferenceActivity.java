@@ -41,10 +41,9 @@ public class PreferenceActivity extends AppCompatActivity{
 
         switch (item.getItemId()){
             case android.R.id.home:
-                onBackPressed();
-               /* Intent i = new Intent(this, MainActivity.class);
+                Intent i = new Intent(this, MainActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);*/
+                startActivity(i);
                 break;
             case R.id.quit:
                 finishAffinity();
@@ -70,6 +69,7 @@ public class PreferenceActivity extends AppCompatActivity{
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     ResortRepository.getInstance().setIsLoaded(false);
+
                     SharedPreferences.Editor editor= PreferenceActivity.prefs.edit();
 
                     if(prefZoom.isChecked())

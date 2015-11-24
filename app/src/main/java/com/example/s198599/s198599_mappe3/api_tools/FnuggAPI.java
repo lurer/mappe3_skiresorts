@@ -105,7 +105,7 @@ public class FnuggAPI extends AsyncTask<USE_API, Void, String> {
                 String apiUrl = urlTemplate;
                 apiUrl = apiUrl + (from +"|" + to);
                 url = new URL(apiUrl);
-                Log.d("RESORT", "URL: " + url.toString());
+                //Log.d("RESORT", "URL: " + url.toString());
 
                 jsonResult = IOUtils.toString(url);             //Kjør API-kallet
                 root = parser.parse(jsonResult);                //Finn rot-elementer i Json-objektet
@@ -153,7 +153,7 @@ public class FnuggAPI extends AsyncTask<USE_API, Void, String> {
             newResort.setName(name);
             newResort.setLocation(loc);
             repository.addResortToList(newResort);
-            Log.d("RESORT", "New Resort; " + id + " " + name);
+            //Log.d("RESORT", "New Resort; " + id + " " + name);
         }
     }
 

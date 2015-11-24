@@ -1,6 +1,6 @@
 <resources>
 
-    <!-- Base application theme. -->
+    <!--android:Theme.Holo.Light-->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
 
         <item name="android:background">@drawable/activity_background</item>
@@ -8,4 +8,8 @@
 
     </style>
 
+    <style name="MyActionbarTheme" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">#333</item>
+    </style>
 </resources>
+

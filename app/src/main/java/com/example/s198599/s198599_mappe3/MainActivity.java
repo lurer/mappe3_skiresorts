@@ -24,6 +24,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -48,10 +49,20 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
         repository = ResortRepository.getInstance();
         mapHandler = new MyMapHandler();
 
-
-        FnuggAPI fnuggApi = new FnuggAPI(this);              //Grensesnittet mot APIet
-        fnuggApi.execute(Static_lib.USE_API.FNUGG_INIT);       //Starter AsyncTask
+        startFullImport();
     }
+
+    public void startFullImport(){
+
+        repository.setIsLoaded(false);
+        repository.setDisableGoogleApi(false);
+        repository.setCustomMarkerPosition(null);
+        new FnuggAPI(this).execute(Static_lib.USE_API.FNUGG_INIT); //Grensesnittet mot APIet
+        
+    }
+
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -72,7 +83,8 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
                 break;
-            case R.id.showMap:
+            case R.id.reload:
+                startFullImport();
                 break;
             case R.id.showInfo:
                 i = new Intent(this, AboutActivity.class);
@@ -116,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
 
         private List<Resort> list;
         private GoogleMap map;
-        private Location myLocation;
+        private LatLng myLocation;
         private Resort resort;
         private float zoomLevel;
         private FnuggAPI fnuggApi;
@@ -133,18 +145,18 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
          * @param googleMap
          */
         @Override
-        public void onMapReady(GoogleMap googleMap) {
+        public void onMapReady(final GoogleMap googleMap) {
             Log.d("RESORT", "I onMapReady");
 
             map = googleMap;
 
 
-            zoomMapToMyLocation();  //Posisjonerer kartet til min lokasjon.
+            getMyLocationUsingGps();
+
             addMarkersOnMap();      //Legger til alle markers på kartet
 
             if(!repository.isLoaded()){
                 new GoogleDistanceAPI(this).execute(myLocation);
-
             }
 
             googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -164,22 +176,61 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
                 }
             });
 
+            googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+                @Override
+                public void onMapLongClick(LatLng latLng) {
+
+                    myLocation = latLng;
+                    Marker customMarker = addCustomMarkerOnMap();
+                    if(repository.getCustomMarkerPosition() != null){
+                        customMarker.remove();
+                    }
+                    repository.setCustomMarkerPosition(latLng);
+                }
+            });
+
         }
 
+
+        public Marker addCustomMarkerOnMap(){
+
+            Marker custom = map.addMarker(new MarkerOptions()
+                    .position(myLocation)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+            zoomMapToMyLocation();
+            return custom;
+        }
 
         /**
          * Løper gjennom dataene som er importert og legger markers på kartet
          */
         public void addMarkersOnMap() {
             for (Resort r : list) {
-
-                //Log.d("RESORT", "I onMapReady " + r.getLocation().toString());
                 LatLng ll = r.getLocation();
                 map.addMarker(new MarkerOptions().position(ll).title(r.getName()));
-
             }
             map.setMyLocationEnabled(true);
+        }
 
+
+        public void clearMap(){
+            map.clear();
+        }
+
+
+
+        public void getMyLocationUsingGps(){
+            try{
+                LocationManager locMan = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+                Criteria crit = new Criteria();
+                Location loc = locMan.getLastKnownLocation(locMan.getBestProvider(crit, false));
+                myLocation = new LatLng(loc.getLatitude(), loc.getLongitude());
+
+                zoomMapToMyLocation();
+            } catch (Exception se){
+                Log.d("RESORT", "Security xception - Kan ikke få tak i siste lokasjon");
+
+            }
         }
 
 
@@ -188,18 +239,13 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
          */
         public void zoomMapToMyLocation(){
             try{
-                LocationManager locMan = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-                Criteria crit = new Criteria();
-                myLocation = locMan.getLastKnownLocation(locMan.getBestProvider(crit, false));
-                //Log.d("RESORT", "My Location lat/lng: (" + myLocation.getLatitude() + ", " + myLocation.getLongitude() + ")");
                 CameraPosition camPos = new CameraPosition.Builder()
-                        .target(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()))
+                        .target(myLocation)
                         .zoom(zoomLevel)
                         .build();
-
-                CameraUpdate camUpate = CameraUpdateFactory.newCameraPosition(camPos);
-                map.moveCamera(camUpate);
-            }catch(SecurityException se){
+                CameraUpdate camUpdate = CameraUpdateFactory.newCameraPosition(camPos);
+                map.moveCamera(camUpdate);
+            } catch (SecurityException se){
                 Log.d("RESORT", "Security xception - Kan ikke få tak i siste lokasjon");
             }
         }

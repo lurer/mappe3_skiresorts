@@ -35,7 +35,8 @@
 
         <activity
             android:name=".PreferenceActivity"
-            android:label="@string/title_activity_preference" >
+            android:label="@string/title_activity_preference"
+            >
         </activity>
         <activity
             android:name=".AboutActivity"

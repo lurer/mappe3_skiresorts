@@ -4,16 +4,16 @@
     android:layout_height="match_parent"
     android:paddingTop="10dp"
     android:paddingBottom="10dp"
-    android:paddingLeft="5dp">
+    >
 
     <ImageView
         android:id="@+id/itemImage"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="20dp"
+        android:layout_height="40dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="5dp"
-        android:background="@drawable/snowflake_256_256"/>
+        android:background="@drawable/snowflake_half"/>
     <TextView
         android:id="@+id/rName"
 
