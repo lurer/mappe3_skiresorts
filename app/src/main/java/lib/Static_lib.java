@@ -11,8 +11,12 @@ public class Static_lib {
     public static DecimalFormat DECIMAL_FORMAT_NO = new DecimalFormat(",#");
 
     public enum USE_API {FNUGG_INIT, FNUGG_DETAIL}
-    public enum IMAGE_SCALE {SCALE1, SCALE2, SCALE3}
-    public enum IMAGE_TYPE {SMALL_THUMB, BIG_THUMB, COVER}
-    public enum WEEKDAY {MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY;};
-    public enum SOCIALMEDIA{TWITTER, FACEBOOK, INSTRAGRAM};
+
+    public final static String prefNordNorge = "Nord-Norge";
+    public final static String prefMidtNorge = "Midt-Norge";
+    public final static String prefNordVestlandet = "Nord-Vestlandet";
+    public final static String prefSorVestlandet = "Sør-Vestlandet";
+    public final static String prefSorlandet = "Sørlandet";
+    public final static String prefOstlandet = "Østlandet";
+
 }

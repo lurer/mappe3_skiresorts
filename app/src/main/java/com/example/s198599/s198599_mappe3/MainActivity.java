@@ -12,13 +12,14 @@ import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.s198599.s198599_mappe3.api_tools.DistanceCallback;
 import com.example.s198599.s198599_mappe3.api_tools.FnuggAPI;
 import com.example.s198599.s198599_mappe3.api_tools.FnuggCallback;
 import com.example.s198599.s198599_mappe3.api_tools.GoogleDistanceAPI;
 import com.example.s198599.s198599_mappe3.models.Resort;
-import com.example.s198599.s198599_mappe3.models.ResortRepository;
+import com.example.s198599.s198599_mappe3.models.Repository;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -37,7 +38,7 @@ import lib.Static_lib;
 public class MainActivity extends AppCompatActivity implements FnuggCallback{
 
 
-    private ResortRepository repository;
+    private Repository repository;
     private MyMapHandler mapHandler;
     public static Display DISPLAY;
 
@@ -46,19 +47,25 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         DISPLAY = getWindowManager().getDefaultDisplay();
-        repository = ResortRepository.getInstance();
+        repository = Repository.getInstance();
         mapHandler = new MyMapHandler();
 
-        startFullImport();
+        startImport();
     }
 
-    public void startFullImport(){
+    public void startImport(){
+        Log.d("RESORT", "MainActivity - Starting import");
+        if(!repository.isLoaded()){                 //Resette alt før ny import
+            repository.setIsLoaded(false);
+            repository.setDisableGoogleApi(false);
+            repository.setCustomMarkerLatLng(null);
+            repository.setCustomMapMarker(null);
+            new FnuggAPI(this).execute(Static_lib.USE_API.FNUGG_INIT); //Grensesnittet mot APIet
 
-        repository.setIsLoaded(false);
-        repository.setDisableGoogleApi(false);
-        repository.setCustomMarkerPosition(null);
-        new FnuggAPI(this).execute(Static_lib.USE_API.FNUGG_INIT); //Grensesnittet mot APIet
-        
+        }else{
+            notifyFnuggResult();        //Bruk eksisterende data
+        }
+
     }
 
 
@@ -84,7 +91,10 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
                 startActivity(i);
                 break;
             case R.id.reload:
-                startFullImport();
+                Log.d("RESORT", "Reload is pressed");
+                mapHandler.clearMap();
+                repository.setIsLoaded(false);
+                startImport();
                 break;
             case R.id.showInfo:
                 i = new Intent(this, AboutActivity.class);
@@ -137,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
             list = repository.getResorts();
             SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
             zoomLevel = prefs.getFloat("zoomLevel", 9.0f);
-            //zoomLevel = 9.0f;
+
         }
 
         /**
@@ -150,22 +160,16 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
 
             map = googleMap;
 
+            runLocationAndMapOperations();     //Bestem
 
-            getMyLocationUsingGps();
 
-            addMarkersOnMap();      //Legger til alle markers på kartet
-
-            if(!repository.isLoaded()){
-                new GoogleDistanceAPI(this).execute(myLocation);
-            }
-
-            googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker) {
 
                     resort = repository.matchLocationinformation(marker.getPosition());
-                    if(resort != null){
-                        Log.d("RESORT", "Marker clicked. markerID = " + resort.getName());
+                    if (resort != null) {
+                        Log.d("RESORT", "Marker clicked. Info: = " + resort.getId() + " " + resort.getName());
 
                         repository.setResortMarkerClicked(resort.getId());
                         fnuggApi = new FnuggAPI(mapHandler);              //Grensesnittet mot APIet
@@ -176,29 +180,64 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
                 }
             });
 
-            googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
                 @Override
                 public void onMapLongClick(LatLng latLng) {
 
-                    myLocation = latLng;
-                    Marker customMarker = addCustomMarkerOnMap();
-                    if(repository.getCustomMarkerPosition() != null){
-                        customMarker.remove();
-                    }
-                    repository.setCustomMarkerPosition(latLng);
+                    myLocation = latLng;                            //MyLocation er nå "custom"
+                    repository.setCustomMarkerLatLng(latLng);
+                    Toast.makeText(getBaseContext(),
+                            getString(R.string.positionUpdate), Toast.LENGTH_SHORT).show();
+
+                    addCustomMarkerOnMap();         //Setter eller bytter ut Custom marker på kartet
+                    runGoogleDistanceApi();         //Kjører nye beregninger på distanse.
                 }
             });
 
         }
 
 
-        public Marker addCustomMarkerOnMap(){
+        public void runLocationAndMapOperations(){
+            if (repository.getCustomMarkerLatLng() == null){
+                getMyLocationUsingGps();
+            }else{
+                myLocation = repository.getCustomMarkerLatLng();
+                addCustomMarkerOnMap();
 
-            Marker custom = map.addMarker(new MarkerOptions()
+                repository.setIsLoaded(false);  //Åpne for å kalkulere distanser på nytt
+            }
+
+
+            addMarkersOnMap();      //Legger til alle markers på kartet
+            if(!repository.isLoaded()) {
+                runGoogleDistanceApi();
+            }
+        }
+
+
+        public void runGoogleDistanceApi(){
+
+            new GoogleDistanceAPI(this).execute(myLocation);
+        }
+
+
+        /**
+         * Setter CustomMarker på kartet og zoomer inn dit.
+         * @return
+         */
+        public void addCustomMarkerOnMap(){
+
+            if(repository.getCustomMapMarker() != null){
+                repository.getCustomMapMarker().remove();
+            }
+
+            Marker customMarker = map.addMarker(new MarkerOptions()
                     .position(myLocation)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+
+            repository.setCustomMapMarker(customMarker);
+
             zoomMapToMyLocation();
-            return custom;
         }
 
         /**

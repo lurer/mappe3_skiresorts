@@ -1,13 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/prefTitle">
+
 
     <PreferenceCategory
-        android:title="@string/prefTitle"
+        android:title="@string/prefZoomTitle"
         >
 
         <CheckBoxPreference
             android:key="zoom_checkbox"
             android:title="@string/prefFineZoom"/>
 
+    </PreferenceCategory>
+
+
+    <PreferenceCategory
+        android:title="@string/prefRegionTitle">
+
+        <CheckBoxPreference
+            android:key="prefNordNorge"
+            android:title="@string/prefRegionNordNorge"/>
+        <CheckBoxPreference
+            android:key="prefMidtNorge"
+            android:title="@string/prefRegionMidtNorge"/>
+        <CheckBoxPreference
+            android:key="prefNordVestlandet"
+            android:title="@string/prefRegionNordVestlandet"/>
+        <CheckBoxPreference
+            android:key="prefSorVestlandet"
+            android:title="@string/prefRegionSorVestlandet"/>
+        <CheckBoxPreference
+            android:key="prefSorlandet"
+            android:title="@string/prefRegionSorlandet"/>
+        <CheckBoxPreference
+            android:key="prefOstlandet"
+            android:title="@string/prefRegionOstlandet"/>
     </PreferenceCategory>
 </PreferenceScreen>

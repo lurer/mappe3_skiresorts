@@ -4,33 +4,47 @@ import com.google.android.gms.maps.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.google.android.gms.maps.model.*;
+
 /**
  * Created by espen on 11/5/15.
  */
-public class ResortRepository {
+public class Repository {
 
-    private static ResortRepository instance;
+    private static Repository instance;
     private static List<Resort> resorts;
     private static boolean isLoaded;        //Alle data er lastet
     private static int resortMarkerClicked;
-    private static LatLng customMarkerPosition;
+    private static LatLng customMarkerLatLng;
+    private static Marker customMapMarker;
+
+
     private static boolean disableGoogleApi;
+
+
+
+    public Marker getCustomMapMarker() {
+        return customMapMarker;
+    }
+
+    public void setCustomMapMarker(Marker customMapMarker) {
+        customMapMarker = customMapMarker;
+    }
+
 
     public boolean isDisableGoogleApi() {
         return disableGoogleApi;
     }
 
     public void setDisableGoogleApi(boolean disableGoogleApi) {
-        ResortRepository.disableGoogleApi = disableGoogleApi;
+        Repository.disableGoogleApi = disableGoogleApi;
     }
 
-    public LatLng getCustomMarkerPosition() {
-        return customMarkerPosition;
+    public LatLng getCustomMarkerLatLng() {
+        return customMarkerLatLng;
     }
 
-    public void setCustomMarkerPosition(LatLng customMarkerPosition) {
-        ResortRepository.customMarkerPosition = customMarkerPosition;
+    public void setCustomMarkerLatLng(LatLng customMarkerPosition) {
+        customMarkerLatLng = customMarkerPosition;
     }
 
 
@@ -41,7 +55,7 @@ public class ResortRepository {
     }
 
     public void setResortMarkerClicked(int resortMarkerClicked) {
-        ResortRepository.resortMarkerClicked = resortMarkerClicked;
+        this.resortMarkerClicked = resortMarkerClicked;
     }
 
     public boolean isLoaded() {
@@ -52,18 +66,18 @@ public class ResortRepository {
 
 
     public void setIsLoaded(boolean isLoaded) {
-        ResortRepository.isLoaded = isLoaded;
+        this.isLoaded = isLoaded;
     }
 
-    private ResortRepository(){
+    private Repository(){
         if(resorts == null)
             resorts = new ArrayList<>();
     }
 
 
-    public static ResortRepository getInstance(){
+    public static Repository getInstance(){
         if(instance == null)
-            instance = new ResortRepository();
+            instance = new Repository();
         return instance;
     }
 

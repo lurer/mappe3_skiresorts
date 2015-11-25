@@ -1,32 +1,20 @@
 package com.example.s198599.s198599_mappe3;
 
-import android.app.FragmentManager;
-import android.app.ListFragment;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.Toast;
 
 
 import com.example.s198599.s198599_mappe3.api_tools.FnuggAPI;
 import com.example.s198599.s198599_mappe3.api_tools.FnuggCallback;
 import com.example.s198599.s198599_mappe3.models.Resort;
-import com.example.s198599.s198599_mappe3.models.ResortAdapter;
 import com.example.s198599.s198599_mappe3.models.ResortAdapterCallback;
 import com.example.s198599.s198599_mappe3.models.ResortListFragment;
-import com.example.s198599.s198599_mappe3.models.ResortRepository;
-
-import java.util.List;
+import com.example.s198599.s198599_mappe3.models.Repository;
 
 import lib.Static_lib;
 
@@ -38,14 +26,14 @@ public class ResortList extends AppCompatActivity implements ResortAdapterCallba
 
     private Resort selectedResort;
     private FnuggAPI fnuggApi;
-    private ResortRepository repository;
+    private Repository repository;
     private ResortListFragment listFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resort_list);
-        repository = ResortRepository.getInstance();
+        repository = Repository.getInstance();
         listFragment = (ResortListFragment)getFragmentManager().findFragmentById(R.id.resort_list_view_activity);
     }
 

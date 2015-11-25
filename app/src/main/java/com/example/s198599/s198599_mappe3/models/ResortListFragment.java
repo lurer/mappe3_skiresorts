@@ -2,10 +2,7 @@ package com.example.s198599.s198599_mappe3.models;
 
 import android.app.Activity;
 import android.app.ListFragment;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +12,6 @@ import android.widget.ListView;
 import com.example.s198599.s198599_mappe3.R;
 
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,7 +30,7 @@ public class ResortListFragment extends ListFragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        list = ResortRepository.getInstance().getResorts();
+        list = Repository.getInstance().getResorts();
 
         adapter = new ResortAdapter(getActivity(),
                 android.R.layout.simple_list_item_1,

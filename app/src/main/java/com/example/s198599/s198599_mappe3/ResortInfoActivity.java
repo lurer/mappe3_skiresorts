@@ -1,9 +1,6 @@
 package com.example.s198599.s198599_mappe3;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,10 +9,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.s198599.s198599_mappe3.models.Resort;
-import com.example.s198599.s198599_mappe3.models.ResortRepository;
+import com.example.s198599.s198599_mappe3.models.Repository;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +19,7 @@ import java.util.Map;
 public class ResortInfoActivity extends AppCompatActivity {
 
     private int resortID;
-    private ResortRepository repository;
+    private Repository repository;
     private Resort resort;
     private Map<String, View> views;
 
@@ -33,7 +29,7 @@ public class ResortInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_resort_info);
         Log.d("RESORT", "ResortInfoActivity");
 
-        repository = ResortRepository.getInstance();
+        repository = Repository.getInstance();
 
         Intent thisIntent = this.getIntent();
         resortID = thisIntent.getIntExtra("ResortID", -1);

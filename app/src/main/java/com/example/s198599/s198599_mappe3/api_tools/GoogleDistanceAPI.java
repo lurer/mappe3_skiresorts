@@ -1,12 +1,11 @@
 package com.example.s198599.s198599_mappe3.api_tools;
 
-import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.s198599.s198599_mappe3.models.Distance;
 import com.example.s198599.s198599_mappe3.models.Resort;
-import com.example.s198599.s198599_mappe3.models.ResortRepository;
+import com.example.s198599.s198599_mappe3.models.Repository;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -20,14 +19,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
-import lib.Static_lib;
-
 /**
  * Created by espen on 11/17/15.
  */
 public class GoogleDistanceAPI  extends AsyncTask<LatLng, Void, Void>{
 
-    private ResortRepository repository;
+    private Repository repository;
     private String jsonResult;
     private JsonParser parser;
     private JsonElement root;
@@ -37,13 +34,14 @@ public class GoogleDistanceAPI  extends AsyncTask<LatLng, Void, Void>{
     private String apiUrl;
     private LatLng myLocation;
 
+
     public GoogleDistanceAPI(DistanceCallback callback){this.callback = callback;}
 
     @Override
     protected Void doInBackground(LatLng... param) {
 
 
-        repository = ResortRepository.getInstance();
+        repository = Repository.getInstance();
 
         myLocation = param[0]; //Min lokasjon
         Log.d("RESORT", "MyLocation " + myLocation.toString());
@@ -66,7 +64,7 @@ public class GoogleDistanceAPI  extends AsyncTask<LatLng, Void, Void>{
                 Log.d("RESORT", "GoogleDistanceURL: " + url.toString());
 
                 jsonResult = IOUtils.toString(url);             //Kjør API-kallet
-                Log.d("RESORT", "JsonResult " + jsonResult);
+                //Log.d("RESORT", "JsonResult " + jsonResult);
                 parser = new JsonParser();
                 root = parser.parse(jsonResult);                //Finn rot-elementer i Json-objektet
 
@@ -85,6 +83,7 @@ public class GoogleDistanceAPI  extends AsyncTask<LatLng, Void, Void>{
             if(counterLower + increment >= listSize)        //Man har allerede nådd slutten av listen i forrige omgang
                 break;
 
+            Log.d("RESORT", "Lower: " + counterLower + ", Upper: " + counterUpper);
             counterLower = counterUpper;
             if(counterUpper + increment > listSize)
                 counterUpper = listSize;
@@ -97,6 +96,7 @@ public class GoogleDistanceAPI  extends AsyncTask<LatLng, Void, Void>{
 
         saveRelevantDataFromJson();
         repository.setIsLoaded(true); //////////Hindrer Google API å bli lastet før den er false igjen
+        Log.d("RESORT", "Repository isLoaded er satt til true: " + repository.isLoaded());
         return null;
     }
 

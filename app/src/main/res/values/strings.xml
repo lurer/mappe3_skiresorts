@@ -1,41 +1,52 @@
 <resources>
-    <string name="app_name">Skiresorts</string>
-    <string name="showListMenu">Show as list</string>
-    <string name="showMapMenu">Show in map</string>
-    <string name="settingsMenu">Settings</string>
-    <string name="showInfoMenu">Information</string>
-    <string name="quitMenu">Quit</string>
-    <string name="reloadMenu">Reload</string>
-    <string name="title_activity_preference">PreferenceActivity</string>
+    <string name="app_name">Skisteder</string>
+    <string name="showListMenu">Vis som liste</string>
+    <string name="showMapMenu">Vis i kart</string>
+    <string name="settingsMenu">Innstillinger</string>
+    <string name="showInfoMenu">Informasjon</string>
+    <string name="quitMenu">Avslutt</string>
+    <string name="reloadMenu">Last på nytt</string>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+
+
+<string name="title_activity_preference">PreferenceActivity</string>
+    <string name="action_settings">Innstillinger</string>
     <string name="title_activity_about">AboutActivity</string>
     <string name="title_activity_resort_info">ResortInfoActivity</string>
 
     <string name="lblInfo">Info:</string>
-    <string name="lblDistance">Distance:</string>
-    <string name="lblDuration">Driving time:</string>
-    <string name="lblContact">Contact:</string>
-    <string name="lblLifts">Lifts open:</string>
-    <string name="lblSlopes">Slopes open:</string>
-    <string name="lblService">Phone service:</string>
-    <string name="lblPatrol">Ski patrol:</string>
-    <string name="lblPhone">Phone:</string>
-    <string name="lblEmail">Email:</string>
+    <string name="lblDistance">Distanse:</string>
+    <string name="lblDuration">Kjøretid:</string>
+    <string name="lblContact">Kontakt:</string>
+    <string name="lblLifts">Åpne heiser:</string>
+    <string name="lblSlopes">Åpne bakker:</string>
+    <string name="lblService">Tlf service:</string>
+    <string name="lblPatrol">Skipatrulje:</string>
+    <string name="lblPhone">Tlf:</string>
+    <string name="lblEmail">E-post:</string>
 
-    <string name="timeUnit">hours</string>
+    <string name="timeUnit">timer</string>
 
-    <string name="prefTitle">Preferences</string>
-    <string name="prefZoom">Choose zoom level</string>
-    <string name="prefFineZoom">Fine Zoom</string>
+    <string name="prefTitle">Innstillinger</string>
+    <string name="prefZoomTitle">Velg nivå på zoom</string>
+    <string name="prefFineZoom">Bedre zoom</string>
+    <string name="prefRegionTitle">Filtrer søkeresultater på regioner</string>
+    <string name="prefRegionMidtNorge">Midt-Norge</string>
+    <string name="prefRegionNordNorge">Nord-Norge</string>
+    <string name="prefRegionNordVestlandet">Nord-Vestlandet</string>
+    <string name="prefRegionSorVestlandet">Sør-Vestlandet</string>
+    <string name="prefRegionSorlandet">Sørlandet</string>
+    <string name="prefRegionOstlandet">Østlandet</string>
 
 
-    <string name="aboutTitle">Skiresorts - About</string>
-    <string name="aboutProvides">The app provides:</string>
-    <string name="aboutInformation">About the information:</string>
+    <string name="aboutTitle">Om Skisteder</string>
+    <string name="aboutProvides">Appen tilbyr:</string>
+    <string name="aboutInformation">Om ekstern databruk:</string>
 
-    <string name="sort">Sort by</string>
-    <string name="alphabetical">a-z</string>
+    <string name="sort">Sorter etter</string>
+    <string name="alphabetical">a-å</string>
     <string name="distance">km</string>
+
+
+    <string name="positionUpdate">Distanse og kjøretider oppdateres nå automatisk</string>
 </resources>

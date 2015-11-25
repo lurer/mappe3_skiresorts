@@ -1,5 +1,7 @@
 package com.example.s198599.s198599_mappe3.api_tools;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -16,11 +18,13 @@ import com.example.s198599.s198599_mappe3.models.Lifts;
 import com.example.s198599.s198599_mappe3.models.Resort;
 import com.example.s198599.s198599_mappe3.models.Slopes;
 import com.google.android.gms.maps.model.LatLng;
-import com.example.s198599.s198599_mappe3.models.ResortRepository;
+import com.example.s198599.s198599_mappe3.models.Repository;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import lib.FnuggUrlBuilder;
 import lib.Static_lib.*;
 import org.apache.commons.io.IOUtils;
 
@@ -28,6 +32,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -35,18 +41,24 @@ import java.net.URL;
  */
 public class FnuggAPI extends AsyncTask<USE_API, Void, String> {
 
-    private ResortRepository repository;
+    private Repository repository;
     private String jsonResult;
     private JsonParser parser;
     private JsonElement root;
     private JsonArray outerArray;
     private FnuggCallback callback;
 
+    private Set<String> selectedRegionsPref;
 
 
 
     public FnuggAPI(FnuggCallback callback){
         this.callback = callback;
+        readPreferenceRegionsSelected();
+        Log.d("RESORT", "FnuggAPI - Prøver å lese hvilke regioner som er valgt i Preferences");
+        for(String s : selectedRegionsPref){
+            Log.d("RESORT", "Selected region: " + s);
+        }
     }
 
     public FnuggAPI(){
@@ -54,14 +66,16 @@ public class FnuggAPI extends AsyncTask<USE_API, Void, String> {
     }
 
 
-    public void setCallback(FnuggCallback callback){
-        this.callback = callback;
+    public void readPreferenceRegionsSelected(){
+        SharedPreferences prefs = ((MainActivity)callback).getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        selectedRegionsPref = prefs.getStringSet("regionsSelected", new HashSet<String>());
     }
+
 
     @Override
     protected String doInBackground(USE_API... params) {
 
-        repository = ResortRepository.getInstance();        //Få tak i repository
+        repository = Repository.getInstance();        //Få tak i repository
 
         for(USE_API param : params){
             //Finner ut hvilken jobb som skal gjøres med Jsonresultatet
@@ -170,12 +184,12 @@ public class FnuggAPI extends AsyncTask<USE_API, Void, String> {
             URL url;
 
             url = new URL(detailUrl);
-            //Log.d("RESORT", "URL: " + url.toString());
+            Log.d("RESORT", "URL: " + url.toString());
 
             String jsonResult = IOUtils.toString(url);             //Kjør API-kallet
             JsonParser parser = new JsonParser();
             JsonElement root = parser.parse(jsonResult);                //Finn rot-elementer i Json-objektet
-            //Log.d("RESORT", jsonResult.toString());
+            Log.d("RESORT", jsonResult.toString());
 
             JsonObject outerObject = root.getAsJsonObject().get("_source").getAsJsonObject();
 
