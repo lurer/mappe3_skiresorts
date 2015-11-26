@@ -19,9 +19,11 @@ public class AboutActivity extends AppCompatActivity {
 
         TextView provides = (TextView)findViewById(R.id.aboutProvides);
         TextView information = (TextView)findViewById(R.id.aboutInformation);
+        TextView settings = (TextView)findViewById(R.id.aboutSettings);
 
         provides.setText(getTextFromFile("provides"));
         information.setText(getTextFromFile("information"));
+        settings.setText(getTextFromFile("settings"));
     }
 
     @Override
@@ -59,6 +61,8 @@ public class AboutActivity extends AppCompatActivity {
             case "information":
                 is = getResources().openRawResource(R.raw.about_information);
                 break;
+            case "settings":
+                is = getResources().openRawResource(R.raw.about_settings);
         }
 
         try{

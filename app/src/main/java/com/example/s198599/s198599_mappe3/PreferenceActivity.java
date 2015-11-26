@@ -33,7 +33,6 @@ public class PreferenceActivity extends AppCompatActivity{
         setContentView(R.layout.activity_preference);
         prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
 
-
         getFragmentManager().beginTransaction().
                 replace(android.R.id.content, new PrefFragment()).
                 commit();

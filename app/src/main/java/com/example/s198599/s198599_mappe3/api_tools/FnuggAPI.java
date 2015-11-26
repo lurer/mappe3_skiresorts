@@ -47,12 +47,14 @@ public class FnuggAPI extends AsyncTask<USE_API, Void, String> {
     private JsonElement root;
     private JsonArray outerArray;
     private FnuggCallback callback;
+    Context context;
 
     private Set<String> selectedRegionsPref;
 
 
 
-    public FnuggAPI(FnuggCallback callback){
+    public FnuggAPI(Context context, FnuggCallback callback){
+        this.context = context;
         this.callback = callback;
         readPreferenceRegionsSelected();
         Log.d("RESORT", "FnuggAPI - Prøver å lese hvilke regioner som er valgt i Preferences");
@@ -67,7 +69,7 @@ public class FnuggAPI extends AsyncTask<USE_API, Void, String> {
 
 
     public void readPreferenceRegionsSelected(){
-        SharedPreferences prefs = ((MainActivity)callback).getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        SharedPreferences prefs = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         selectedRegionsPref = prefs.getStringSet("regionsSelected", new HashSet<String>());
     }
 
@@ -81,6 +83,7 @@ public class FnuggAPI extends AsyncTask<USE_API, Void, String> {
             //Finner ut hvilken jobb som skal gjøres med Jsonresultatet
             switch (param){
                 case FNUGG_INIT:
+                    repository.emptyResortList();       //Sletter listen før man importerer på nytt.
                     getJsonStringForAllResorts();
                     //Log.d("RESORT", outerArray.toString());
                     initialImportLocationAndIds();
@@ -151,6 +154,8 @@ public class FnuggAPI extends AsyncTask<USE_API, Void, String> {
      */
     public void initialImportLocationAndIds(){
         Log.d("RESORT", "Starter import av Resort ID og lokasjon");
+
+
 
         for(JsonElement element: outerArray){
             Resort newResort = new Resort();

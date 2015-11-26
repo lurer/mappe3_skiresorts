@@ -26,11 +26,12 @@
     <string name="lblEmail">E-post:</string>
 
     <string name="timeUnit">timer</string>
+    <string name="myLocation">Min lokasjon</string>
 
     <string name="prefTitle">Innstillinger</string>
     <string name="prefZoomTitle">Velg nivå på zoom</string>
     <string name="prefFineZoom">Bedre zoom</string>
-    <string name="prefRegionTitle">Filtrer søkeresultater på regioner</string>
+    <string name="prefRegionTitle">Klikk på de regionene du vil fjerne fra søkeresultatene</string>
     <string name="prefRegionMidtNorge">Midt-Norge</string>
     <string name="prefRegionNordNorge">Nord-Norge</string>
     <string name="prefRegionNordVestlandet">Nord-Vestlandet</string>
@@ -42,6 +43,7 @@
     <string name="aboutTitle">Om Skisteder</string>
     <string name="aboutProvides">Appen tilbyr:</string>
     <string name="aboutInformation">Om ekstern databruk:</string>
+    <string name="aboutSettings">Innstillinger:</string>
 
     <string name="sort">Sorter etter</string>
     <string name="alphabetical">a-å</string>

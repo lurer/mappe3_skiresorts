@@ -78,7 +78,7 @@ public class ResortList extends AppCompatActivity implements ResortAdapterCallba
     public void onItemClicked(Resort resort) {
         Log.d("RESORT", "Selected resort != null");
         selectedResort = resort;
-        fnuggApi = new FnuggAPI(this);              //Grensesnittet mot APIet
+        fnuggApi = new FnuggAPI(this, this);              //Grensesnittet mot APIet
         repository.setResortMarkerClicked(selectedResort.getId());
         fnuggApi.execute(Static_lib.USE_API.FNUGG_DETAIL);
     }

@@ -18,8 +18,6 @@ public class Repository {
     private static Marker customMapMarker;
 
 
-    private static boolean disableGoogleApi;
-
 
 
     public Marker getCustomMapMarker() {
@@ -27,24 +25,17 @@ public class Repository {
     }
 
     public void setCustomMapMarker(Marker customMapMarker) {
-        customMapMarker = customMapMarker;
+        this.customMapMarker = customMapMarker;
     }
 
 
-    public boolean isDisableGoogleApi() {
-        return disableGoogleApi;
-    }
-
-    public void setDisableGoogleApi(boolean disableGoogleApi) {
-        Repository.disableGoogleApi = disableGoogleApi;
-    }
 
     public LatLng getCustomMarkerLatLng() {
         return customMarkerLatLng;
     }
 
     public void setCustomMarkerLatLng(LatLng customMarkerPosition) {
-        customMarkerLatLng = customMarkerPosition;
+        this.customMarkerLatLng = customMarkerPosition;
     }
 
 
@@ -127,5 +118,11 @@ public class Repository {
                 return r;
         }
         return null;
+    }
+
+
+    public void emptyResortList(){
+        if(resorts != null)
+            resorts.clear();
     }
 }

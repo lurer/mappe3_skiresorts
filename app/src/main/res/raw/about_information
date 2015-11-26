@@ -1,3 +1,2 @@
-Information from this app is collected from the open API of fnugg.no. It provides data and pictures from all the ski resorts.
-
-Driving distances and driving time to each resort is pulled from Google Distance Matrix Api.
+Informasjonen som brukes i denne appen er hentet fra to stedet. Fnugg.no har et åpent API som brukes for å hente informasjon om alle skistedene.
+Google sitt Distance Matrix API brukes for å kalkulere avstanden og kjøretid fra "min posisjon" til hvert av skistedene.

@@ -1,6 +1,11 @@
-Information about all the major ski resorts in Norway plotted in a map or listed in a list.
+Skisteder gir deg informasjon om alle de store skistedene i Norge, vist på et kart eller i en liste.
 
-The list can be sorted by name or by driving distance.
-The map has different zoom levels, edited in the settings section.
+Listen kan sorteres på navn og kjøredistanse fra der du befinner deg. Klikk på en rad i listen for å få opp informasjon om skistedet.
 
-Detailed information about any given ski resort can accessed by clicking on a marker in the map, or by clicking on a row in the list.
+Kartet har alle de aktuelle skistedene plottet, og ved å trykke på et av dem så får man opp informasjon om det skistedet.
+Man kan overstyre "min posisjon" ved å trykke og holde inne i ca 1 sekund på det stedet man ønsker som "min posisjon" på kartet.
+
+I det man velger en ny posisjon som "min posisjon" så vil avstandene til alle skistedene automatisk oppdateres.
+Man kan gjøre dette på nytt for da å flytte posisjonen og gjøre beregningene på nytt igjen.
+
+Ønsker man å stille tilbake innstillingene for kartet til standardinnstillinger så kan man trykke på "oppdater"-ikonet.

@@ -57,10 +57,9 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
         Log.d("RESORT", "MainActivity - Starting import");
         if(!repository.isLoaded()){                 //Resette alt før ny import
             repository.setIsLoaded(false);
-            repository.setDisableGoogleApi(false);
             repository.setCustomMarkerLatLng(null);
             repository.setCustomMapMarker(null);
-            new FnuggAPI(this).execute(Static_lib.USE_API.FNUGG_INIT); //Grensesnittet mot APIet
+            new FnuggAPI(this, this).execute(Static_lib.USE_API.FNUGG_INIT); //Grensesnittet mot APIet
 
         }else{
             notifyFnuggResult();        //Bruk eksisterende data
@@ -172,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
                         Log.d("RESORT", "Marker clicked. Info: = " + resort.getId() + " " + resort.getName());
 
                         repository.setResortMarkerClicked(resort.getId());
-                        fnuggApi = new FnuggAPI(mapHandler);              //Grensesnittet mot APIet
+                        fnuggApi = new FnuggAPI(getBaseContext(), mapHandler);              //Grensesnittet mot APIet
                         fnuggApi.execute(Static_lib.USE_API.FNUGG_DETAIL);
 
                     }
@@ -233,6 +232,7 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
 
             Marker customMarker = map.addMarker(new MarkerOptions()
                     .position(myLocation)
+                    .title(getString(R.string.myLocation))
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 
             repository.setCustomMapMarker(customMarker);

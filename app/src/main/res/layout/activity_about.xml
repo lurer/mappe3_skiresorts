@@ -1,49 +1,68 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="30dp"
     tools:context="com.example.s198599.s198599_mappe3.AboutActivity">
 
-
-    <TextView
-        android:id="@+id/aboutTitle"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="24dp"
-        android:textStyle="bold"
-        android:layout_alignParentTop="true"
-        android:gravity="center_horizontal"
-        android:layout_marginBottom="15dp"
-        android:textColor="@color/header_text_color"
-        android:text="@string/aboutTitle"/>
+        android:layout_height="match_parent"
+        android:padding="5dp">
+        <TextView
+            android:id="@+id/aboutTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="24dp"
+            android:textStyle="bold"
+            android:layout_alignParentTop="true"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="15dp"
+            android:textColor="@color/header_text_color"
+            android:text="@string/aboutTitle"/>
 
-    <TextView
-        android:id="@+id/provides"
-        android:text="@string/aboutProvides"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/aboutTitle"
-        android:textColor="@color/header_text_color"/>
-    <TextView
-        android:id="@+id/aboutProvides"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/provides"
-        android:textColor="@color/light_text_color"/>
+        <TextView
+            android:id="@+id/provides"
+            android:text="@string/aboutProvides"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/aboutTitle"
+            android:textColor="@color/header_text_color"/>
+        <TextView
+            android:id="@+id/aboutProvides"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/provides"
+            android:textColor="@color/light_text_color"/>
 
-    <TextView
-        android:id="@+id/information"
-        android:text="@string/aboutInformation"
-        android:textColor="@color/header_text_color"
-        android:layout_below="@+id/aboutProvides"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/settings"
+            android:text="@string/aboutSettings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/aboutProvides"
+            android:textColor="@color/header_text_color"/>
+        <TextView
+            android:id="@+id/aboutSettings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/settings"
+            android:textColor="@color/light_text_color"/>
 
-    <TextView
-        android:id="@+id/aboutInformation"
-        android:layout_below="@+id/information"
-        android:textColor="@color/light_text_color"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-</RelativeLayout>
+        <TextView
+            android:id="@+id/information"
+            android:text="@string/aboutInformation"
+            android:textColor="@color/header_text_color"
+            android:layout_below="@+id/aboutSettings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/aboutInformation"
+            android:layout_below="@+id/information"
+            android:textColor="@color/light_text_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+</ScrollView>
