@@ -1,8 +1,11 @@
 package com.example.s198599.s198599_mappe3.api_tools;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.example.s198599.s198599_mappe3.R;
 import com.example.s198599.s198599_mappe3.models.Distance;
 import com.example.s198599.s198599_mappe3.models.Resort;
 import com.example.s198599.s198599_mappe3.models.Repository;
@@ -33,9 +36,12 @@ public class GoogleDistanceAPI  extends AsyncTask<LatLng, Void, Void>{
     private DistanceCallback callback;
     private String apiUrl;
     private LatLng myLocation;
+    private Context context;
 
+    public GoogleDistanceAPI(Context context, DistanceCallback callback){
+        this.context = context;
+        this.callback = callback;}
 
-    public GoogleDistanceAPI(DistanceCallback callback){this.callback = callback;}
 
     @Override
     protected Void doInBackground(LatLng... param) {
@@ -141,19 +147,25 @@ public class GoogleDistanceAPI  extends AsyncTask<LatLng, Void, Void>{
         List<Resort> list = repository.getResorts();
         //Log.d("RESORT", "Resortlist og GoogleJson-resultat er like lang: " + list.size() + " " + elementsArray.size());
 
-        for(int i = 0; i < list.size(); i++){
+        try{
+            for(int i = 0; i < list.size(); i++){
 
-            JsonElement elem = elementsArray.get(i);
-            JsonObject dist = elem.getAsJsonObject().get("distance").getAsJsonObject();
-            JsonObject dura = elem.getAsJsonObject().get("duration").getAsJsonObject();
+                JsonElement elem = elementsArray.get(i);
+                JsonObject dist = elem.getAsJsonObject().get("distance").getAsJsonObject();
+                JsonObject dura = elem.getAsJsonObject().get("duration").getAsJsonObject();
 
 
-            Distance distance = new Distance(list.get(i).getLocation()
-                    ,dist.get("value").getAsInt()
-                    ,dura.get("value").getAsInt());
-            list.get(i).setDistance(distance);
+                Distance distance = new Distance(list.get(i).getLocation()
+                        ,dist.get("value").getAsInt()
+                        ,dura.get("value").getAsInt());
+                list.get(i).setDistance(distance);
 
+            }
+        }catch (NullPointerException npe){
+            Log.d("RESORT", "Google API - Nullpointer. Sannsynlig at My location var ugyldig");
+            repository.setApiError(context.getString(R.string.errorLocationNA));
         }
+
 
 
     }

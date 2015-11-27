@@ -3,12 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <RelativeLayout
         android:id="@+id/laySort"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:layout_centerHorizontal="true">
+
+
 
         <RelativeLayout
             android:id="@+id/laySort1"
@@ -82,6 +85,8 @@
                 android:layout_toRightOf="@+id/distance"/>
         </RelativeLayout>
     </RelativeLayout>
+
+
 
     <fragment
         android:layout_below="@+id/laySort"

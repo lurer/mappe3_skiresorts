@@ -4,36 +4,60 @@
 
 
     <PreferenceCategory
-        android:title="@string/prefZoomTitle"
-        >
+        android:title="@string/prefCategoryZoomTitle">
 
-        <CheckBoxPreference
-            android:key="zoom_checkbox"
-            android:title="@string/prefFineZoom"/>
+        <ListPreference
+            android:title="@string/prefFineZoom"
+            android:summary="@string/prefZoomSummary"
+            android:entries="@array/zoomArray"
+            android:entryValues="@array/zoomArray"
+            android:key="prefZoomLevel"
+            android:defaultValue="8.0f"/>
+    </PreferenceCategory>
+
+
+    <PreferenceCategory
+        android:title="@string/prefCategoryFilterTitle">
+
+        <MultiSelectListPreference
+            android:title="@string/prefRegionTitle"
+            android:summary="@string/prefRegionSummary"
+            android:entries="@array/regionArrayEntries"
+            android:entryValues="@array/regionArrayValues"
+            android:key="prefMultichoiceRegions"
+            android:defaultValue="@array/emptyArray"/>
+
+
+        <ListPreference
+            android:title="@string/prefLiftFilterTitle"
+            android:summary="@string/prefLiftFilterSummary"
+            android:entries="@array/liftArray"
+            android:entryValues="@array/liftArray"
+            android:key="prefLiftFilterList"
+            android:defaultValue="1"/>
+
+        <ListPreference
+            android:title="@string/prefSlopeFilterTitle"
+            android:summary="@string/prefSlopeFilterSummary"
+            android:entries="@array/slopeArray"
+            android:entryValues="@array/slopeArray"
+            android:key="prefSlopeFilterList"
+            android:defaultValue="1"/>
 
     </PreferenceCategory>
 
 
     <PreferenceCategory
-        android:title="@string/prefRegionTitle">
+        android:title="@string/prefCategoryDebugTitle">
 
         <CheckBoxPreference
-            android:key="prefNordNorge"
-            android:title="@string/prefRegionNordNorge"/>
-        <CheckBoxPreference
-            android:key="prefMidtNorge"
-            android:title="@string/prefRegionMidtNorge"/>
-        <CheckBoxPreference
-            android:key="prefNordVestlandet"
-            android:title="@string/prefRegionNordVestlandet"/>
-        <CheckBoxPreference
-            android:key="prefSorVestlandet"
-            android:title="@string/prefRegionSorVestlandet"/>
-        <CheckBoxPreference
-            android:key="prefSorlandet"
-            android:title="@string/prefRegionSorlandet"/>
-        <CheckBoxPreference
-            android:key="prefOstlandet"
-            android:title="@string/prefRegionOstlandet"/>
+            android:title="@string/prefDebugModeTitle"
+            android:summary="@string/prefDebugModeSummary"
+            android:key="prefDebug"
+            android:defaultValue="true"/>
     </PreferenceCategory>
+
+
+
+
 </PreferenceScreen>

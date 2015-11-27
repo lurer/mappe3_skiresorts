@@ -9,7 +9,7 @@
 
 
 
-<string name="title_activity_preference">PreferenceActivity</string>
+    <string name="title_activity_preference">PreferenceActivity</string>
     <string name="action_settings">Innstillinger</string>
     <string name="title_activity_about">AboutActivity</string>
     <string name="title_activity_resort_info">ResortInfoActivity</string>
@@ -28,17 +28,23 @@
     <string name="timeUnit">timer</string>
     <string name="myLocation">Min lokasjon</string>
 
-    <string name="prefTitle">Innstillinger</string>
-    <string name="prefZoomTitle">Velg nivå på zoom</string>
-    <string name="prefFineZoom">Bedre zoom</string>
-    <string name="prefRegionTitle">Klikk på de regionene du vil fjerne fra søkeresultatene</string>
-    <string name="prefRegionMidtNorge">Midt-Norge</string>
-    <string name="prefRegionNordNorge">Nord-Norge</string>
-    <string name="prefRegionNordVestlandet">Nord-Vestlandet</string>
-    <string name="prefRegionSorVestlandet">Sør-Vestlandet</string>
-    <string name="prefRegionSorlandet">Sørlandet</string>
-    <string name="prefRegionOstlandet">Østlandet</string>
+    <string name="prefCategoryZoomTitle">Zoom</string>
+    <string name="prefCategoryFilterTitle">Filtrering av søkeresultater</string>
+    <string name="prefCategoryDebugTitle">Debugging</string>
 
+    <string name="prefTitle">Innstillinger</string>
+    <string name="prefZoomSummary">Velg nivå på zoom i kartet</string>
+    <string name="prefFineZoom">Zoom-nivå</string>
+
+    <string name="prefRegionTitle">Regioner</string>
+    <string name="prefRegionSummary">Velg de regionene du vil fjerne fra søkeresultatene</string>
+    <string name="prefDebugModeTitle">Debugmodus</string>
+    <string name="prefDebugModeSummary">Aktiver denne for å begrense søkeresultatene under testing</string>
+
+    <string name="prefLiftFilterTitle">Antall heiser</string>
+    <string name="prefLiftFilterSummary">Sett minimum antall skiheiser</string>
+    <string name="prefSlopeFilterTitle">Minimum antall bakker</string>
+    <string name="prefSlopeFilterSummary">Sett minimum antall bakker</string>
 
     <string name="aboutTitle">Om Skisteder</string>
     <string name="aboutProvides">Appen tilbyr:</string>
@@ -51,4 +57,13 @@
 
 
     <string name="positionUpdate">Distanse og kjøretider oppdateres nå automatisk</string>
+
+    <string name="errorNoResult">FEIL... Resultat = 0. Gjør noe med filterne i innstillingene.</string>
+    <string name="errorLocationNA">FEIL... Prøv å sette en ny lokasjon i kartet som er tilgjenglig med bil.</string>
+
+
+    <string name="sortAlphaAsc">Sorterer listen alfabetisk, stigende.</string>
+    <string name="sortAlphaDesc">Sorterer listen alfabetisk, synkende.</string>
+    <string name="sortDistAsc">Sorterer listen på km, stigende.</string>
+    <string name="sortDistDesc">Sorterer listen på km, synkende.</string>
 </resources>

@@ -6,9 +6,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 
+import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
+import android.view.Surface;
 
 import com.example.s198599.s198599_mappe3.MainActivity;
 import com.example.s198599.s198599_mappe3.models.Contact;
@@ -49,28 +51,38 @@ public class FnuggAPI extends AsyncTask<USE_API, Void, String> {
     private FnuggCallback callback;
     Context context;
 
-    private Set<String> selectedRegionsPref;
-
-
+    private Set<String> selectedRegions;
+    private int numLifts;
+    private int numSlopes;
+    private boolean debugEnabled;
+    private FnuggUrlBuilder urlBuilder;
 
     public FnuggAPI(Context context, FnuggCallback callback){
         this.context = context;
         this.callback = callback;
-        readPreferenceRegionsSelected();
-        Log.d("RESORT", "FnuggAPI - Prøver å lese hvilke regioner som er valgt i Preferences");
-        for(String s : selectedRegionsPref){
-            Log.d("RESORT", "Selected region: " + s);
-        }
+        getSelectedPreferences();
+        urlBuilder = new FnuggUrlBuilder();
+
     }
 
     public FnuggAPI(){
 
     }
 
+    /**
+     * Leser av SharedPreferences.
+     */
+    public void getSelectedPreferences(){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-    public void readPreferenceRegionsSelected(){
-        SharedPreferences prefs = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-        selectedRegionsPref = prefs.getStringSet("regionsSelected", new HashSet<String>());
+        String lifts = prefs.getString("prefLiftFilterList", "1");
+
+        String slopes = prefs.getString("prefSlopeFilterList", "1");
+        Log.d("RESORT", "Lifts selected: " + lifts + ", Slopes selected: " + slopes);
+        selectedRegions = prefs.getStringSet("prefMultichoiceRegions", new HashSet<String>());
+        debugEnabled = prefs.getBoolean("prefDebug", true);
+        numLifts = Integer.parseInt(lifts);
+        numSlopes = Integer.parseInt(slopes);
     }
 
 
@@ -84,13 +96,13 @@ public class FnuggAPI extends AsyncTask<USE_API, Void, String> {
             switch (param){
                 case FNUGG_INIT:
                     repository.emptyResortList();       //Sletter listen før man importerer på nytt.
-                    getJsonStringForAllResorts();
+                    buildJsonStringForAllResorts();     //Kjører API-kall og finner root-elementet
                     //Log.d("RESORT", outerArray.toString());
-                    initialImportLocationAndIds();
+                    importLocationAndIdsToRepo();       //Importerer til Repository
                     break;
                 case FNUGG_DETAIL:
                     Log.d("RESORT", "FNUGG_DETAIL er valgt");
-                    getResortDetails();
+                    getResortDetails();                 //Henter detaljer om et spesifikt skisted
                     break;
             }
 
@@ -108,33 +120,53 @@ public class FnuggAPI extends AsyncTask<USE_API, Void, String> {
     }
 
 
-    public void getJsonStringForAllResorts(){
-        //http://fnuggapi.cloudapp.net/search?sourceFields=_id,name,location&range=id:11|20
-        String urlTemplate = "http://fnuggapi.cloudapp.net/search?sourceFields=_id,name,location&range=id:";
+
+    public void buildJsonStringForAllResorts(){
+
+
         try{
             URL url;
             outerArray = new JsonArray();
             parser = new JsonParser();
-            int from = 91;
-            int to = 100;
+
             boolean doUntil = true;
-            while( doUntil ){
-                String apiUrl = urlTemplate;
-                apiUrl = apiUrl + (from +"|" + to);
-                url = new URL(apiUrl);
-                //Log.d("RESORT", "URL: " + url.toString());
+            int page = 1;
 
-                jsonResult = IOUtils.toString(url);             //Kjør API-kallet
-                root = parser.parse(jsonResult);                //Finn rot-elementer i Json-objektet
+            int totalResults = testExpectedApiResult();     //Kjører test for å avgjøre forventet resultat
 
-                if(root.getAsJsonObject().get("hits").getAsJsonObject().get("total").getAsInt() == 0)
-                    doUntil = false;
+            if(totalResults > 0){           //Bare hvis det finnes noe resultat
 
-                outerArray.addAll(root.getAsJsonObject().get("hits") //OuterArray er startpunktet for all data.
-                        .getAsJsonObject().getAsJsonArray("hits"));
-                from = to +1;
-                to += 10;
-            };
+                while( doUntil ){
+
+                    String apiUrl = urlBuilder.startUrl()
+                            .sourceFields()
+                            .addRegions(selectedRegions)
+                            .addLiftFilter(numLifts, 200)
+                            .addSlopeFilter(numSlopes, 200)
+                            .page(page)
+                            .build();
+
+                    url = new URL(apiUrl);
+                    Log.d("RESORT", "URL: " + url.toString());
+
+                    jsonResult = IOUtils.toString(url);             //Kjør API-kallet
+                    root = parser.parse(jsonResult);                //Finn rot-elementer i Json-objektet
+
+                    JsonArray hits = root.getAsJsonObject().get("hits").getAsJsonObject().getAsJsonArray("hits");
+
+                    if(hits.size() == 0 ){
+                        doUntil = false;
+                    }else{
+                        outerArray.addAll(hits);
+                    }
+                    if(debugEnabled){
+                        if(outerArray.size() > 15)
+                            doUntil = false;
+                    }
+                    Log.d("RESORT", "Page = " + page);
+                    page++;
+                };
+            }
 
 
             Log.d("RESORT", "Klar for JSON-konvertering til Java-objekter");
@@ -147,12 +179,43 @@ public class FnuggAPI extends AsyncTask<USE_API, Void, String> {
     }
 
 
+    /**
+     * Testmetode som returnerer forventet antall skisteder.
+     * @return
+     */
+    public int testExpectedApiResult(){
+        String test = urlBuilder.startUrl()
+                .sourceFields()
+                .addRegions(selectedRegions)
+                .addLiftFilter(numLifts, 200)
+                .addSlopeFilter(numSlopes, 200)
+                .build();
+
+        try {
+            URL url = new URL(test);
+            Log.d("RESORT", "Tester Fnugg-URL: " + url.toString());
+
+            jsonResult = IOUtils.toString(url);             //Kjør API-kallet
+            root = parser.parse(jsonResult);                //Finn rot-elementer i Json-objektet
+            int testresultat =  root.getAsJsonObject().get("hits").getAsJsonObject().get("total").getAsInt();
+
+            Log.d("RESORT", "Resultat av testkjøring er: " + testresultat);
+            return testresultat;
+        }catch(MalformedURLException me){
+            Log.d("RESORT", "Exception - FnuggAPI - MalformedURLException");
+        }catch (IOException ioe){
+            Log.d("RESORT", "Exception - FnuggAPI - IOException");
+        }
+        return 0;
+    }
+
+
 
 
     /**
      * Importerer alle Resorts, med Id'er og GPS-data
      */
-    public void initialImportLocationAndIds(){
+    public void importLocationAndIdsToRepo(){
         Log.d("RESORT", "Starter import av Resort ID og lokasjon");
 
 
@@ -194,7 +257,7 @@ public class FnuggAPI extends AsyncTask<USE_API, Void, String> {
             String jsonResult = IOUtils.toString(url);             //Kjør API-kallet
             JsonParser parser = new JsonParser();
             JsonElement root = parser.parse(jsonResult);                //Finn rot-elementer i Json-objektet
-            Log.d("RESORT", jsonResult.toString());
+            //Log.d("RESORT", jsonResult.toString());
 
             JsonObject outerObject = root.getAsJsonObject().get("_source").getAsJsonObject();
 
@@ -210,6 +273,7 @@ public class FnuggAPI extends AsyncTask<USE_API, Void, String> {
             Log.d("RESORT", "Exception - FnuggAPI - IOException");
         }
     }
+
 
     public void saveLiftsAndSlopes(JsonObject outerObject, Resort selectedResort) throws IOException{
         Lifts lifts = new Lifts();
@@ -229,12 +293,20 @@ public class FnuggAPI extends AsyncTask<USE_API, Void, String> {
 
     }
 
+
+    /**
+     * Avgjør hvilket bilde som passer best til enheten og importer det.
+     * @param outerObject
+     * @param selectedResort
+     * @throws IOException
+     */
     public void saveImages(JsonObject outerObject, Resort selectedResort) throws IOException{
 
 
         DisplayMetrics dm = new DisplayMetrics();
         Display display = MainActivity.DISPLAY;
         display.getMetrics(dm);
+        int rotationAngle = display.getRotation();
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
@@ -252,7 +324,10 @@ public class FnuggAPI extends AsyncTask<USE_API, Void, String> {
         }else if(width <= 1024) {
             imgSize = "image_16_9_m";
         }else{
-            imgSize = "image_16_9_xl";
+            if(rotationAngle == Surface.ROTATION_90 || rotationAngle == Surface.ROTATION_270)
+                imgSize = "image_1_1_l";
+            else
+                imgSize = "image_16_9_xl";
         }
         Bitmap image_16_9 = BitmapFactory.decodeStream((InputStream) new URL(jsonImages.get(imgSize).getAsString()).getContent());
         images.setImage_16_9(image_16_9);

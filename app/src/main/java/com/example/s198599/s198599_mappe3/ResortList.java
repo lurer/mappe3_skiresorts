@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 
 import com.example.s198599.s198599_mappe3.api_tools.FnuggAPI;
@@ -29,12 +30,15 @@ public class ResortList extends AppCompatActivity implements ResortAdapterCallba
     private Repository repository;
     private ResortListFragment listFragment;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resort_list);
         repository = Repository.getInstance();
         listFragment = (ResortListFragment)getFragmentManager().findFragmentById(R.id.resort_list_view_activity);
+
+
     }
 
     @Override
@@ -96,21 +100,25 @@ public class ResortList extends AppCompatActivity implements ResortAdapterCallba
 
     public void sortAlphabeticallyAsc(View view){
         if(repository.isLoaded())
+            Toast.makeText(this, getString(R.string.sortAlphaAsc), Toast.LENGTH_SHORT).show();
             listFragment.sortAlphabeticallyAsc();
     }
 
     public void sortAlphabeticallyDesc(View view){
         if(repository.isLoaded())
+            Toast.makeText(this, getString(R.string.sortAlphaDesc), Toast.LENGTH_SHORT).show();
             listFragment.sortAlphabeticallyDesc();
     }
 
     public void sortDistanceAsc(View view){
         if(repository.isLoaded())
+            Toast.makeText(this, getString(R.string.sortDistAsc), Toast.LENGTH_SHORT).show();
             listFragment.sortDistanceAsc();
     }
 
     public void sortDistanceDesc(View view){
         if(repository.isLoaded())
+            Toast.makeText(this, getString(R.string.sortDistDesc), Toast.LENGTH_SHORT).show();
             listFragment.sortDistanceDesc();
     }
 

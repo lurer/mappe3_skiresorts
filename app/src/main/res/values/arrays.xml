@@ -1,4 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string-array name="regionArrayValues">
+        <item>Nord-Norge</item>
+        <item>Midt-Norge</item>
+        <item>Nord-Vestlandet</item>
+        <item>Sør-Vestlandet</item>
+        <item>Sørlandet</item>
+        <item>Østlandet</item>
+
+    </string-array>
+
+    <string-array name="regionArrayEntries">
+        <item>Nord-Norge</item>
+        <item>Midt-Norge</item>
+        <item>Nord-Vestlandet</item>
+        <item>Sør-Vestlandet</item>
+        <item>Sørlandet</item>
+        <item>Østlandet</item>
+
+    </string-array>
+
+    <string-array name="slopeArray">
+        <item>1</item>
+        <item>3</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>25</item>
+
+    </string-array>
+
+    <string-array name="liftArray">
+        <item>1</item>
+        <item>3</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>25</item>
+
+    </string-array>
+
+    <string-array name="zoomArray">
+        <item>6.0f</item>
+        <item>6.5f</item>
+        <item>7.0f</item>
+        <item>7.5f</item>
+        <item>8.0f</item>
+        <item>8.5f</item>
+        <item>9.0f</item>
+    </string-array>
+    
+    <array name="emptyArray"></array>
+
 </resources>

@@ -9,23 +9,40 @@
     tools:context="com.example.s198599.s198599_mappe3.ResortInfoActivity"
     >
 
-    <TextView
-        android:id="@+id/rName"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginRight="50dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:textColor="@color/header_text_color"
-        android:layout_marginBottom="20dp"
-        android:textSize="24dp"
-        android:textStyle="bold"/>
+        android:layout_alignParentRight="true">
+
+        <TextView
+            android:id="@+id/rName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:textAlignment="center"
+            android:textColor="@color/header_text_color"
+            android:layout_marginBottom="20dp"
+            android:textSize="24dp"
+            android:textStyle="bold"/>
+
+        <ImageView
+            android:id="@+id/detailImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/rName"
+            />
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/layInfo"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/rName"
-        android:layout_centerHorizontal="true">
+        android:layout_height="match_parent"
+
+        android:layout_alignParentLeft="true">
 
         <TextView
             android:id="@+id/lblInfo"
@@ -39,7 +56,7 @@
             android:id="@+id/lblDistance"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/lblInfo"
+            android:layout_below="@+id/lblInfo"
             android:textColor="@color/light_text_color"
             android:text="@string/lblDistance"/>
         <TextView
@@ -55,7 +72,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/light_text_color"
             android:text="@string/lblDuration"
-            android:layout_toRightOf="@id/lblInfo"
+
             android:layout_below="@id/lblDistance"/>
         <TextView
             android:id="@+id/rDuration"
@@ -70,7 +87,7 @@
             android:layout_width="100dp"
             android:textColor="@color/light_text_color"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/lblInfo"
+
             android:layout_below="@id/lblDuration"
             android:text="@string/lblLifts"/>
         <TextView
@@ -85,7 +102,7 @@
             android:layout_width="100dp"
             android:textColor="@color/light_text_color"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/lblInfo"
+
             android:layout_below="@id/lblLifts"
             android:text="@string/lblSlopes"
             />
@@ -98,36 +115,28 @@
             android:layout_toRightOf="@id/lblSlopes"/>
 
 
-    </RelativeLayout>
 
-
-    <RelativeLayout
-        android:id="@+id/layContact"
-        android:layout_below="@+id/layInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
-        >
         <TextView
             android:id="@+id/contact"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:textColor="@color/header_text_color"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/lblSlopes"
+            android:layout_marginTop="15dp"
             android:text="@string/lblContact"
             android:textStyle="bold"
-            android:textAlignment="viewEnd"/>
+            />
         <TextView
             android:id="@+id/rAddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/light_text_color"
-            android:layout_toRightOf="@+id/contact"/>
+            android:layout_below="@+id/contact"
+            />
         <TextView
             android:id="@+id/rZip_code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/contact"
             android:textColor="@color/light_text_color"
             android:layout_below="@id/rAddress"/>
         <TextView
@@ -144,7 +153,6 @@
             android:layout_height="wrap_content"
             android:textColor="@color/light_text_color"
             android:text="@string/lblService"
-            android:layout_toRightOf="@+id/contact"
             android:layout_below="@+id/rZip_code"/>
         <TextView
             android:id="@+id/rService"
@@ -160,7 +168,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/light_text_color"
             android:text="@string/lblPatrol"
-            android:layout_toRightOf="@+id/contact"
+
             android:layout_below="@id/lblService"/>
         <TextView
             android:id="@+id/rPatrol"
@@ -175,7 +183,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/light_text_color"
             android:text="@string/lblPhone"
-            android:layout_toRightOf="@+id/contact"
+
             android:layout_below="@id/lblPatrol"/>
         <TextView
             android:id="@+id/rPhone"
@@ -190,7 +198,7 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:text="@string/lblEmail"
-            android:layout_toRightOf="@+id/contact"
+
             android:layout_below="@id/lblPhone"/>
         <TextView
             android:id="@+id/rEmail"
@@ -202,19 +210,7 @@
     </RelativeLayout>
 
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true">
-        <ImageView
-            android:id="@+id/detailImage"
-            android:layout_centerHorizontal="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
 
-            />
-    </RelativeLayout>
 
 
 

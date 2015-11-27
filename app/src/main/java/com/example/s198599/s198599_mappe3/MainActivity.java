@@ -1,11 +1,13 @@
 package com.example.s198599.s198599_mappe3;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -53,6 +55,12 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
         startImport();
     }
 
+
+    /**
+     * Kjører import av data. Denne kan bare kjøres om Repository ikke er "isLoaded".
+     * Når FnuggApi er ferdigkjørt vil kartet startes. NotifyfnuggResult er den funksjonen
+     * som startet kartet, og er ogs den metoden som kjøres hvis det allerede finnes data i repository
+     */
     public void startImport(){
         Log.d("RESORT", "MainActivity - Starting import");
         if(!repository.isLoaded()){                 //Resette alt før ny import
@@ -68,8 +76,6 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
     }
 
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -78,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
 
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -106,12 +113,13 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
                 startActivity(i);
                 break;
             case R.id.quit:
-                finishAffinity();
+                onBackPressed();
                 break;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 
 
     /**
@@ -120,9 +128,16 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
      */
     @Override
     public void notifyFnuggResult() {
-        SupportMapFragment mapFragment = (SupportMapFragment)getSupportFragmentManager().
-                findFragmentById(R.id.map);
-        mapFragment.getMapAsync(mapHandler);
+
+        if(repository.getResorts().size() > 0){
+            SupportMapFragment mapFragment = (SupportMapFragment)getSupportFragmentManager().
+                    findFragmentById(R.id.map);
+            mapFragment.getMapAsync(mapHandler);
+
+        }else{
+            Toast.makeText(this, getString(R.string.errorNoResult), Toast.LENGTH_LONG).show();
+        }
+
     }
 
 
@@ -144,9 +159,9 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
 
         public MyMapHandler(){
             list = repository.getResorts();
-            SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-            zoomLevel = prefs.getFloat("zoomLevel", 9.0f);
-
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+            String zoomString = prefs.getString("prefZoomLevel", "8.0f");
+            zoomLevel = Float.parseFloat(zoomString);
         }
 
         /**
@@ -159,8 +174,7 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
 
             map = googleMap;
 
-            runLocationAndMapOperations();     //Bestem
-
+            runLocationAndMapOperations();     //Bestem hvilken lokasjon som gjelder og posisjonerer kartet
 
             map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
@@ -196,27 +210,32 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
         }
 
 
+        /**
+         * Sjekker om det er satt en custom-lokasjon eller ikke
+         */
         public void runLocationAndMapOperations(){
             if (repository.getCustomMarkerLatLng() == null){
-                getMyLocationUsingGps();
+                getMyLocationUsingGps();                    //Bruker GPS-posisjon som min lokasjon
             }else{
                 myLocation = repository.getCustomMarkerLatLng();
-                addCustomMarkerOnMap();
+                addCustomMarkerOnMap();                     //Bruker custom posisjon
 
                 repository.setIsLoaded(false);  //Åpne for å kalkulere distanser på nytt
             }
 
-
-            addMarkersOnMap();      //Legger til alle markers på kartet
+            addMarkersOnMap();                  //Legger til alle markers på kartet
             if(!repository.isLoaded()) {
                 runGoogleDistanceApi();
             }
         }
 
 
+        /**
+         * Setter i gang Api-kallet mot Google Distance Matrix
+         */
         public void runGoogleDistanceApi(){
 
-            new GoogleDistanceAPI(this).execute(myLocation);
+            new GoogleDistanceAPI(getBaseContext(), this).execute(myLocation);
         }
 
 
@@ -240,6 +259,7 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
             zoomMapToMyLocation();
         }
 
+
         /**
          * Løper gjennom dataene som er importert og legger markers på kartet
          */
@@ -253,7 +273,8 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
 
 
         public void clearMap(){
-            map.clear();
+            if(map != null)
+                map.clear();
         }
 
 
@@ -294,10 +315,16 @@ public class MainActivity extends AppCompatActivity implements FnuggCallback{
          */
         @Override
         public void notifyDistanceResult() {
-
+            if(repository.getApiError() != null){
+                Toast.makeText(getBaseContext(), repository.getApiError(), Toast.LENGTH_LONG).show();
+                repository.setApiError(null);
+            }
         }
 
 
+        /**
+         * Kjøres i det man har trykket på en markør og api-kallet er ferdig med å hente data.
+         */
         @Override
         public void notifyFnuggResult() {
 

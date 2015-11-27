@@ -1,2 +1,5 @@
 Informasjonen som brukes i denne appen er hentet fra to stedet. Fnugg.no har et åpent API som brukes for å hente informasjon om alle skistedene.
 Google sitt Distance Matrix API brukes for å kalkulere avstanden og kjøretid fra "min posisjon" til hvert av skistedene.
+
+Hvis man velger sin egen "min posisjon" og den ikke har tilknytning til vei eller annen kjent tilkomst,
+så vil appen ikke oppdatere kjøretider og distanse. Du vil bli bedt om å velge en ny lokasjon.

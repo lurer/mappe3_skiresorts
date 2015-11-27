@@ -1,7 +1,9 @@
 package lib;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by espen on 11/24/15.
@@ -14,24 +16,28 @@ public class FnuggUrlBuilder {
 
     private final static String start = "http://fnuggapi.cloudapp.net/search?";
     private final static String sourceFields = "sourceFields=_id,name,location";
-    private final static int SIZE = 10;
+    private static int size = 10;
 
     private static StringBuilder buildingUrl;
 
     private static List<String> filters;
     private static List<String> facets;
     private static int page;
-    private static boolean facetAdded;
 
 
     public FnuggUrlBuilder(){
-        buildingUrl = new StringBuilder();
+
         instance = this;
     }
 
 
     public FnuggUrlBuilder startUrl(){
-
+        buildingUrl = new StringBuilder();
+        page = 0;
+        if(filters != null)
+            filters.clear();
+        if(facets != null)
+            facets.clear();
         buildingUrl.append(start);
         return instance;
 
@@ -41,37 +47,41 @@ public class FnuggUrlBuilder {
     public FnuggUrlBuilder sourceFields(){
         buildingUrl.append(sourceFields);
 
-/*        int indexToFind = 0;
-        for(int i = buildingUrl.length()-1; i > 2; i--){
-            if(buildingUrl.charAt(i) == ':'){
-                if(buildingUrl.charAt(i-1) == 'd' && buildingUrl.charAt(i-2) == 'i'){
-                    indexToFind = i+1;
-                    break;
-                }
-            }
-        }
-        buildingUrl = buildingUrl.substring(0, indexToFind);
-        buildingUrl = buildingUrl + from + "|" + to;*/
         return instance;
     }
 
 
 
 
-    public FnuggUrlBuilder addRegions(String[] regions){
+    public FnuggUrlBuilder addRegions(Set<String> regions){
 
 
         if(facets == null)
             facets = new ArrayList<>();
 
         String region = "region:";
-
-        if(regions != null){
-
-            for(int i = 0; i < regions.length;i++){
-                region += regions[i];
-                if(i < regions.length-1)
+        int counter = 0;
+        if(regions != null && regions.size() > 0){
+            Iterator<String> i = regions.iterator();
+            while(i.hasNext()){
+                String reg = i.next();
+                switch(reg){
+                    case "Sør-Vestlandet":
+                        region += "S%C3%B8r-Vestlandet";
+                        break;
+                    case "Sørlandet":
+                        region += "S%C3%B8rlandet";
+                        break;
+                    case "Østlandet":
+                        region += "%C3%98stlandet";
+                        break;
+                    default:
+                        region += reg;
+                        break;
+                }
+                if(counter < regions.size()-1)
                     region += ",";
+                counter++;
             }
             facets.add(region);
         }
@@ -134,12 +144,13 @@ public class FnuggUrlBuilder {
             }
         }
 
-        buildingUrl.append("&size=10");
+        buildingUrl.append("&size=" + size);
         if(page > 0)
             buildingUrl.append("&page=" + page);
 
         return buildingUrl.toString();
     }
+
 
 
 }

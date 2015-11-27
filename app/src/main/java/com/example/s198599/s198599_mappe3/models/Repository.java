@@ -16,9 +16,15 @@ public class Repository {
     private static int resortMarkerClicked;
     private static LatLng customMarkerLatLng;
     private static Marker customMapMarker;
+    private static String apiError;
 
+    public String getApiError() {
+        return apiError;
+    }
 
-
+    public void setApiError(String apiError) {
+        this.apiError = apiError;
+    }
 
     public Marker getCustomMapMarker() {
         return customMapMarker;
